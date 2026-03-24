@@ -1,0 +1,39 @@
+name: CI — BFF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'bff/**'
+      - '.github/workflows/ci-bff.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'bff/**'
+      - '.github/workflows/ci-bff.yml'
+
+defaults:
+  run:
+    working-directory: bff
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: bff/go.mod
+          cache-dependency-path: bff/go.sum
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        run: go test ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          working-directory: bff

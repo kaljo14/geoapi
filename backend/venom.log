@@ -1,0 +1,6 @@
+Mar 24 00:51:55.176 [WARN] [GeoPulse Backend - E2E Contract Tests] [GET-livez-returns-ok] Step "http" result is "PASS"
+Mar 24 00:51:55.206 [WARN] [GeoPulse Backend - E2E Contract Tests] [GET-readyz-returns-a-valid-response] Step "http" result is "PASS"
+Mar 24 00:51:55.207 [WARN] [GeoPulse Backend - E2E Contract Tests] [POST-scrape-returns-accepted] Step "http" result is "PASS"
+Mar 24 00:51:55.208 [WARN] [GeoPulse Backend - E2E Contract Tests] [POST-enrich-returns-accepted] Step "http" result is "PASS"
+Mar 24 00:51:55.227 [WARN] [GeoPulse Backend - E2E Contract Tests] [GET-api-places-export-returns-CSV] Step "http" result is "PASS"
+Mar 24 00:51:55.228 [WARN] [GeoPulse Backend - E2E Contract Tests] [GET-api-places-export-simple-returns-CSV] Step "http" result is "PASS"

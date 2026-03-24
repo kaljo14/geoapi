@@ -1,0 +1,161 @@
+name: GeoPulse BFF - E2E Contract Tests
+
+vars:
+  base_url: "http://localhost:8080"
+
+testcases:
+  - name: GET /livez returns ok
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/livez"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.status ShouldEqual ok
+
+  - name: GET /readyz returns a valid response
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/readyz"
+        assertions:
+          - result.statuscode ShouldBeIn 200 503
+          - result.bodyjson.status ShouldNotBeEmpty
+          - result.bodyjson.db ShouldNotBeEmpty
+
+  - name: POST /api/places creates a place
+    steps:
+      - type: http
+        method: POST
+        url: "{{.base_url}}/api/places"
+        headers:
+          Content-Type: application/json
+        body: |
+          {"name":"Test Cafe","lat":42.697,"lng":23.321,"category":"cafe"}
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.place_id ShouldNotBeEmpty
+          - result.bodyjson.name ShouldEqual "Test Cafe"
+        vars:
+          created_place_id:
+            from: result.bodyjson.place_id
+
+  - name: GET /api/places returns list
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/places"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.body ShouldContainSubstring place_id
+
+  - name: GET /api/places with category filter
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/places?category=cafe"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.body ShouldContainSubstring place_id
+
+  - name: GET /api/places/{place_id} returns place
+    steps:
+      - type: http
+        method: POST
+        url: "{{.base_url}}/api/places"
+        headers:
+          Content-Type: application/json
+        body: |
+          {"name":"Lookup Place","lat":42.700,"lng":23.325,"category":"restaurant"}
+        assertions:
+          - result.statuscode ShouldEqual 200
+        vars:
+          lookup_id:
+            from: result.bodyjson.place_id
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/places/{{.lookup_id}}"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.place_id ShouldEqual "{{.lookup_id}}"
+
+  - name: PUT /api/places/{place_id} updates a place
+    steps:
+      - type: http
+        method: POST
+        url: "{{.base_url}}/api/places"
+        headers:
+          Content-Type: application/json
+        body: |
+          {"name":"Update Me","lat":42.701,"lng":23.326,"category":"bar"}
+        assertions:
+          - result.statuscode ShouldEqual 200
+        vars:
+          update_id:
+            from: result.bodyjson.place_id
+      - type: http
+        method: PUT
+        url: "{{.base_url}}/api/places/{{.update_id}}"
+        headers:
+          Content-Type: application/json
+        body: |
+          {"name":"Updated Name","lat":42.701,"lng":23.326,"category":"bar"}
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.name ShouldEqual "Updated Name"
+
+  - name: DELETE /api/places/{place_id} removes a place
+    steps:
+      - type: http
+        method: POST
+        url: "{{.base_url}}/api/places"
+        headers:
+          Content-Type: application/json
+        body: |
+          {"name":"Delete Me","lat":42.702,"lng":23.327,"category":"shop"}
+        assertions:
+          - result.statuscode ShouldEqual 200
+        vars:
+          delete_id:
+            from: result.bodyjson.place_id
+      - type: http
+        method: DELETE
+        url: "{{.base_url}}/api/places/{{.delete_id}}"
+        assertions:
+          - result.statuscode ShouldEqual 204
+
+  - name: GET /api/metro/stops returns GeoJSON
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/metro/stops"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.type ShouldEqual FeatureCollection
+
+  - name: GET /api/metro/shapes returns GeoJSON
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/metro/shapes"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.type ShouldEqual FeatureCollection
+
+  - name: GET /api/saturation returns result
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/saturation?lat=42.697&lng=23.321&radius=500"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.competitor_count ShouldNotBeEmpty
+          - result.bodyjson.score ShouldNotBeEmpty
+
+  - name: GET /api/heatmap returns tiles
+    steps:
+      - type: http
+        method: GET
+        url: "{{.base_url}}/api/heatmap?min_lat=42.68&min_lng=23.30&max_lat=42.72&max_lng=23.35&cell_size=0.01"
+        assertions:
+          - result.statuscode ShouldEqual 200

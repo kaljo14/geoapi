@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS places (
+    place_id                   TEXT PRIMARY KEY,
+    name                       TEXT NOT NULL,
+    address                    TEXT,
+    lat                        FLOAT,
+    lng                        FLOAT,
+    location                   GEOMETRY(Point, 4326),
+    rating                     FLOAT,
+    business_status            TEXT,
+    website                    TEXT,
+    formatted_phone_number     TEXT,
+    international_phone_number TEXT,
+    opening_hours              TEXT,
+    reviews                    TEXT,
+    editorial_summary          TEXT,
+    photos                     TEXT,
+    types                      TEXT,
+    price_level                INT,
+    user_ratings_total         INT,
+    utc_offset_minutes         INT,
+    google_maps_url            TEXT,
+    icon_url                   TEXT,
+    curbside_pickup            BOOLEAN DEFAULT FALSE,
+    delivery                   BOOLEAN DEFAULT FALSE,
+    dine_in                    BOOLEAN DEFAULT FALSE,
+    reservable                 BOOLEAN DEFAULT FALSE,
+    takeout                    BOOLEAN DEFAULT FALSE,
+    wheelchair_accessible      BOOLEAN DEFAULT FALSE,
+    category                   TEXT,
+    tags                       TEXT,
+    scraped_at                 TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_places_location ON places USING GIST(location);
+CREATE INDEX IF NOT EXISTS idx_places_category ON places(category);
