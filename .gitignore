@@ -1,6 +1,5 @@
 # Compiled binaries
-bff/bin/
-backend/bin/
+bin/
 
 # Environment secrets
 .env
@@ -16,10 +15,8 @@ coverage.html
 venom.*.log
 
 # TypeSpec / Node
-bff/typespec/node_modules/
-backend/typespec/node_modules/
-bff/typespec/tsp-output/
-backend/typespec/tsp-output/
+typespec/node_modules/
+typespec/tsp-output/
 
 # macOS
 .DS_Store
