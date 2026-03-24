@@ -1,0 +1,204 @@
+package handler
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+
+	"go.uber.org/zap"
+
+	"github.com/neofyis/geopulse/internal/app"
+	"github.com/neofyis/geopulse/internal/generated"
+)
+
+type Handler struct {
+	app    app.Service
+	logger *zap.Logger
+}
+
+func NewHandler(a app.Service, logger *zap.Logger) *Handler {
+	return &Handler{app: a, logger: logger}
+}
+
+// --- Places ---
+
+func (h *Handler) PlacesList(ctx context.Context, req generated.PlacesListRequestObject) (generated.PlacesListResponseObject, error) {
+	category := ""
+	if req.Params.Category != nil {
+		category = *req.Params.Category
+	}
+	tag := ""
+	if req.Params.Tag != nil {
+		tag = *req.Params.Tag
+	}
+	places, err := h.app.ListPlaces(ctx, category, tag)
+	if err != nil {
+		h.logger.Error("list places failed", zap.Error(err))
+		return nil, err
+	}
+	return generated.PlacesList200JSONResponse(places), nil
+}
+
+func (h *Handler) PlacesCreate(ctx context.Context, req generated.PlacesCreateRequestObject) (generated.PlacesCreateResponseObject, error) {
+	place, err := h.app.CreatePlace(ctx, *req.Body)
+	if err != nil {
+		h.logger.Error("create place failed", zap.Error(err))
+		return generated.PlacesCreate400JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.PlacesCreate200JSONResponse(*place), nil
+}
+
+func (h *Handler) PlaceByIDGet(ctx context.Context, req generated.PlaceByIDGetRequestObject) (generated.PlaceByIDGetResponseObject, error) {
+	place, err := h.app.GetPlace(ctx, req.PlaceId)
+	if err != nil {
+		h.logger.Warn("get place failed", zap.String("place_id", req.PlaceId), zap.Error(err))
+		return generated.PlaceByIDGet404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.PlaceByIDGet200JSONResponse(*place), nil
+}
+
+func (h *Handler) PlaceByIDUpdate(ctx context.Context, req generated.PlaceByIDUpdateRequestObject) (generated.PlaceByIDUpdateResponseObject, error) {
+	place, err := h.app.UpdatePlace(ctx, req.PlaceId, *req.Body)
+	if err != nil {
+		h.logger.Warn("update place failed", zap.String("place_id", req.PlaceId), zap.Error(err))
+		return generated.PlaceByIDUpdate404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.PlaceByIDUpdate200JSONResponse(*place), nil
+}
+
+func (h *Handler) PlaceByIDDelete(ctx context.Context, req generated.PlaceByIDDeleteRequestObject) (generated.PlaceByIDDeleteResponseObject, error) {
+	if err := h.app.DeletePlace(ctx, req.PlaceId); err != nil {
+		h.logger.Warn("delete place failed", zap.String("place_id", req.PlaceId), zap.Error(err))
+		return generated.PlaceByIDDelete404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.PlaceByIDDelete204Response{}, nil
+}
+
+// --- Metro ---
+
+func (h *Handler) MetroShapesGet(ctx context.Context, _ generated.MetroShapesGetRequestObject) (generated.MetroShapesGetResponseObject, error) {
+	fc, err := h.app.GetMetroShapes(ctx)
+	if err != nil {
+		h.logger.Error("get metro shapes failed", zap.Error(err))
+		return nil, err
+	}
+	return generated.MetroShapesGet200JSONResponse(*fc), nil
+}
+
+func (h *Handler) MetroStopsGet(ctx context.Context, _ generated.MetroStopsGetRequestObject) (generated.MetroStopsGetResponseObject, error) {
+	fc, err := h.app.GetMetroStops(ctx)
+	if err != nil {
+		h.logger.Error("get metro stops failed", zap.Error(err))
+		return nil, err
+	}
+	return generated.MetroStopsGet200JSONResponse(*fc), nil
+}
+
+// --- Analytics ---
+
+func (h *Handler) SaturationGet(ctx context.Context, req generated.SaturationGetRequestObject) (generated.SaturationGetResponseObject, error) {
+	radius := 500.0
+	if req.Params.Radius != nil {
+		radius = *req.Params.Radius
+	}
+	category := ""
+	if req.Params.Category != nil {
+		category = *req.Params.Category
+	}
+	result, err := h.app.GetSaturation(ctx, req.Params.Lat, req.Params.Lng, radius, category)
+	if err != nil {
+		h.logger.Error("get saturation failed", zap.Error(err))
+		return generated.SaturationGet400JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.SaturationGet200JSONResponse(*result), nil
+}
+
+func (h *Handler) HeatmapGet(ctx context.Context, req generated.HeatmapGetRequestObject) (generated.HeatmapGetResponseObject, error) {
+	cellSize := 0.005
+	if req.Params.CellSize != nil {
+		cellSize = *req.Params.CellSize
+	}
+	category := ""
+	if req.Params.Category != nil {
+		category = *req.Params.Category
+	}
+	tiles, err := h.app.GetHeatmap(ctx, req.Params.MinLat, req.Params.MinLng, req.Params.MaxLat, req.Params.MaxLng, cellSize, category)
+	if err != nil {
+		h.logger.Error("get heatmap failed", zap.Error(err))
+		return generated.HeatmapGet400JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.HeatmapGet200JSONResponse(tiles), nil
+}
+
+// --- Scrape / Enrich ---
+
+func (h *Handler) ScrapeCreate(ctx context.Context, _ generated.ScrapeCreateRequestObject) (generated.ScrapeCreateResponseObject, error) {
+	if err := h.app.StartScraper(ctx); err != nil {
+		h.logger.Warn("start scraper failed", zap.Error(err))
+		return generated.ScrapeCreate202JSONResponse{Message: err.Error()}, nil
+	}
+	return generated.ScrapeCreate202JSONResponse{Message: "scraper started"}, nil
+}
+
+func (h *Handler) EnrichCreate(ctx context.Context, _ generated.EnrichCreateRequestObject) (generated.EnrichCreateResponseObject, error) {
+	if err := h.app.StartEnricher(ctx); err != nil {
+		h.logger.Warn("start enricher failed", zap.Error(err))
+		return generated.EnrichCreate202JSONResponse{Message: err.Error()}, nil
+	}
+	return generated.EnrichCreate202JSONResponse{Message: "enricher started"}, nil
+}
+
+// --- Health ---
+
+func (h *Handler) LivezGet(_ context.Context, _ generated.LivezGetRequestObject) (generated.LivezGetResponseObject, error) {
+	return generated.LivezGet200JSONResponse{Status: "ok"}, nil
+}
+
+func (h *Handler) ReadyzGet(ctx context.Context, _ generated.ReadyzGetRequestObject) (generated.ReadyzGetResponseObject, error) {
+	if err := h.app.Ready(ctx); err != nil {
+		h.logger.Warn("readyz check failed", zap.Error(err))
+		return generated.ReadyzGet503JSONResponse{Status: "unavailable", Db: err.Error()}, nil
+	}
+	return generated.ReadyzGet200JSONResponse{Status: "ok", Db: "ok"}, nil
+}
+
+// --- Manual CSV routes (bypass oapi-codegen) ---
+
+func (h *Handler) ExportPlaces(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", `attachment; filename="places.csv"`)
+	if err := h.app.ExportCSV(r.Context(), w, false); err != nil {
+		h.logger.Error("export places failed", zap.Error(err))
+	}
+}
+
+func (h *Handler) ExportPlacesSimple(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", `attachment; filename="places-simple.csv"`)
+	if err := h.app.ExportCSV(r.Context(), w, true); err != nil {
+		h.logger.Error("export places simple failed", zap.Error(err))
+	}
+}
+
+func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		http.Error(w, "failed to parse form", http.StatusBadRequest)
+		return
+	}
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "file field required", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	count, err := h.app.ImportCSV(r.Context(), file)
+	if err != nil {
+		h.logger.Error("import places failed", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]int{"imported": count})
+}
