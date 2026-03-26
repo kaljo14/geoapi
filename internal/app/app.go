@@ -30,6 +30,8 @@ type Service interface {
 	GetHeatmap(ctx context.Context, minLat, minLng, maxLat, maxLng, cellSize float64, category string) ([]generated.HeatmapTile, error)
 	StartScraper(ctx context.Context) error
 	StartEnricher(ctx context.Context) error
+	ImportOSMNetwork(ctx context.Context) error
+	ImportOSMPOIs(ctx context.Context) error
 	ExportCSV(ctx context.Context, w io.Writer, simple bool) error
 	ImportCSV(ctx context.Context, r io.Reader) (int, error)
 	Ready(ctx context.Context) error

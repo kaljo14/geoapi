@@ -221,6 +221,27 @@ interface Enrich {
   };
 }
 
+@route("/api/osm")
+interface OSM {
+  @post
+  @route("/import")
+  @summary("Trigger OSM network import")
+  @doc("Starts a background OpenStreetMap pedestrian network import and walkability scoring job for Sofia.")
+  trigger(): {
+    @statusCode statusCode: 202;
+    @body body: MessageResponse;
+  };
+
+  @post
+  @route("/pois")
+  @summary("Trigger OSM POI import")
+  @doc("Starts a background OpenStreetMap POI import (amenity, shop, tourism, leisure) and walk score recomputation for Sofia.")
+  pois(): {
+    @statusCode statusCode: 202;
+    @body body: MessageResponse;
+  };
+}
+
 @route("/livez")
 interface Livez {
   @get

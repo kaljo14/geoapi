@@ -24,6 +24,205 @@ func (_m *MockStore) EXPECT() *MockStore_Expecter {
 	return &MockStore_Expecter{mock: &_m.Mock}
 }
 
+// BulkUpsertEdges provides a mock function with given fields: ctx, edges
+func (_m *MockStore) BulkUpsertEdges(ctx context.Context, edges []store.OSMEdge) error {
+	ret := _m.Called(ctx, edges)
+
+	if len(ret) == 0 {
+		panic("no return value specified for BulkUpsertEdges")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []store.OSMEdge) error); ok {
+		r0 = rf(ctx, edges)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_BulkUpsertEdges_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'BulkUpsertEdges'
+type MockStore_BulkUpsertEdges_Call struct {
+	*mock.Call
+}
+
+// BulkUpsertEdges is a helper method to define mock.On call
+//   - ctx context.Context
+//   - edges []store.OSMEdge
+func (_e *MockStore_Expecter) BulkUpsertEdges(ctx interface{}, edges interface{}) *MockStore_BulkUpsertEdges_Call {
+	return &MockStore_BulkUpsertEdges_Call{Call: _e.mock.On("BulkUpsertEdges", ctx, edges)}
+}
+
+func (_c *MockStore_BulkUpsertEdges_Call) Run(run func(ctx context.Context, edges []store.OSMEdge)) *MockStore_BulkUpsertEdges_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].([]store.OSMEdge))
+	})
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertEdges_Call) Return(_a0 error) *MockStore_BulkUpsertEdges_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertEdges_Call) RunAndReturn(run func(context.Context, []store.OSMEdge) error) *MockStore_BulkUpsertEdges_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// BulkUpsertNodes provides a mock function with given fields: ctx, nodes
+func (_m *MockStore) BulkUpsertNodes(ctx context.Context, nodes []store.OSMNode) error {
+	ret := _m.Called(ctx, nodes)
+
+	if len(ret) == 0 {
+		panic("no return value specified for BulkUpsertNodes")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []store.OSMNode) error); ok {
+		r0 = rf(ctx, nodes)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_BulkUpsertNodes_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'BulkUpsertNodes'
+type MockStore_BulkUpsertNodes_Call struct {
+	*mock.Call
+}
+
+// BulkUpsertNodes is a helper method to define mock.On call
+//   - ctx context.Context
+//   - nodes []store.OSMNode
+func (_e *MockStore_Expecter) BulkUpsertNodes(ctx interface{}, nodes interface{}) *MockStore_BulkUpsertNodes_Call {
+	return &MockStore_BulkUpsertNodes_Call{Call: _e.mock.On("BulkUpsertNodes", ctx, nodes)}
+}
+
+func (_c *MockStore_BulkUpsertNodes_Call) Run(run func(ctx context.Context, nodes []store.OSMNode)) *MockStore_BulkUpsertNodes_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].([]store.OSMNode))
+	})
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertNodes_Call) Return(_a0 error) *MockStore_BulkUpsertNodes_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertNodes_Call) RunAndReturn(run func(context.Context, []store.OSMNode) error) *MockStore_BulkUpsertNodes_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// BulkUpsertPOIs provides a mock function with given fields: ctx, pois
+func (_m *MockStore) BulkUpsertPOIs(ctx context.Context, pois []store.OSMPOI) error {
+	ret := _m.Called(ctx, pois)
+
+	if len(ret) == 0 {
+		panic("no return value specified for BulkUpsertPOIs")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []store.OSMPOI) error); ok {
+		r0 = rf(ctx, pois)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_BulkUpsertPOIs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'BulkUpsertPOIs'
+type MockStore_BulkUpsertPOIs_Call struct {
+	*mock.Call
+}
+
+// BulkUpsertPOIs is a helper method to define mock.On call
+//   - ctx context.Context
+//   - pois []store.OSMPOI
+func (_e *MockStore_Expecter) BulkUpsertPOIs(ctx interface{}, pois interface{}) *MockStore_BulkUpsertPOIs_Call {
+	return &MockStore_BulkUpsertPOIs_Call{Call: _e.mock.On("BulkUpsertPOIs", ctx, pois)}
+}
+
+func (_c *MockStore_BulkUpsertPOIs_Call) Run(run func(ctx context.Context, pois []store.OSMPOI)) *MockStore_BulkUpsertPOIs_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].([]store.OSMPOI))
+	})
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertPOIs_Call) Return(_a0 error) *MockStore_BulkUpsertPOIs_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_BulkUpsertPOIs_Call) RunAndReturn(run func(context.Context, []store.OSMPOI) error) *MockStore_BulkUpsertPOIs_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ComputeWalkScores provides a mock function with given fields: ctx
+func (_m *MockStore) ComputeWalkScores(ctx context.Context) ([]store.NodeScore, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ComputeWalkScores")
+	}
+
+	var r0 []store.NodeScore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.NodeScore, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.NodeScore); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.NodeScore)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ComputeWalkScores_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ComputeWalkScores'
+type MockStore_ComputeWalkScores_Call struct {
+	*mock.Call
+}
+
+// ComputeWalkScores is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ComputeWalkScores(ctx interface{}) *MockStore_ComputeWalkScores_Call {
+	return &MockStore_ComputeWalkScores_Call{Call: _e.mock.On("ComputeWalkScores", ctx)}
+}
+
+func (_c *MockStore_ComputeWalkScores_Call) Run(run func(ctx context.Context)) *MockStore_ComputeWalkScores_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ComputeWalkScores_Call) Return(_a0 []store.NodeScore, _a1 error) *MockStore_ComputeWalkScores_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ComputeWalkScores_Call) RunAndReturn(run func(context.Context) ([]store.NodeScore, error)) *MockStore_ComputeWalkScores_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreatePlace provides a mock function with given fields: ctx, arg
 func (_m *MockStore) CreatePlace(ctx context.Context, arg store.CreatePlaceParams) (store.CreatePlaceRow, error) {
 	ret := _m.Called(ctx, arg)
@@ -648,6 +847,99 @@ func (_c *MockStore_ListPlacesNeedingEnrichment_Call) Return(_a0 []store.ListPla
 }
 
 func (_c *MockStore_ListPlacesNeedingEnrichment_Call) RunAndReturn(run func(context.Context) ([]store.ListPlacesNeedingEnrichmentRow, error)) *MockStore_ListPlacesNeedingEnrichment_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// PropagateEdgeScores provides a mock function with given fields: ctx
+func (_m *MockStore) PropagateEdgeScores(ctx context.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for PropagateEdgeScores")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_PropagateEdgeScores_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PropagateEdgeScores'
+type MockStore_PropagateEdgeScores_Call struct {
+	*mock.Call
+}
+
+// PropagateEdgeScores is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) PropagateEdgeScores(ctx interface{}) *MockStore_PropagateEdgeScores_Call {
+	return &MockStore_PropagateEdgeScores_Call{Call: _e.mock.On("PropagateEdgeScores", ctx)}
+}
+
+func (_c *MockStore_PropagateEdgeScores_Call) Run(run func(ctx context.Context)) *MockStore_PropagateEdgeScores_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_PropagateEdgeScores_Call) Return(_a0 error) *MockStore_PropagateEdgeScores_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_PropagateEdgeScores_Call) RunAndReturn(run func(context.Context) error) *MockStore_PropagateEdgeScores_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateNodeWalkScores provides a mock function with given fields: ctx, scores
+func (_m *MockStore) UpdateNodeWalkScores(ctx context.Context, scores []store.NodeScore) error {
+	ret := _m.Called(ctx, scores)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateNodeWalkScores")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []store.NodeScore) error); ok {
+		r0 = rf(ctx, scores)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_UpdateNodeWalkScores_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateNodeWalkScores'
+type MockStore_UpdateNodeWalkScores_Call struct {
+	*mock.Call
+}
+
+// UpdateNodeWalkScores is a helper method to define mock.On call
+//   - ctx context.Context
+//   - scores []store.NodeScore
+func (_e *MockStore_Expecter) UpdateNodeWalkScores(ctx interface{}, scores interface{}) *MockStore_UpdateNodeWalkScores_Call {
+	return &MockStore_UpdateNodeWalkScores_Call{Call: _e.mock.On("UpdateNodeWalkScores", ctx, scores)}
+}
+
+func (_c *MockStore_UpdateNodeWalkScores_Call) Run(run func(ctx context.Context, scores []store.NodeScore)) *MockStore_UpdateNodeWalkScores_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].([]store.NodeScore))
+	})
+	return _c
+}
+
+func (_c *MockStore_UpdateNodeWalkScores_Call) Return(_a0 error) *MockStore_UpdateNodeWalkScores_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_UpdateNodeWalkScores_Call) RunAndReturn(run func(context.Context, []store.NodeScore) error) *MockStore_UpdateNodeWalkScores_Call {
 	_c.Call.Return(run)
 	return _c
 }

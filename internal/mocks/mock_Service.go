@@ -536,6 +536,98 @@ func (_c *MockService_ImportCSV_Call) RunAndReturn(run func(context.Context, io.
 	return _c
 }
 
+// ImportOSMNetwork provides a mock function with given fields: ctx
+func (_m *MockService) ImportOSMNetwork(ctx context.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ImportOSMNetwork")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockService_ImportOSMNetwork_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ImportOSMNetwork'
+type MockService_ImportOSMNetwork_Call struct {
+	*mock.Call
+}
+
+// ImportOSMNetwork is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ImportOSMNetwork(ctx interface{}) *MockService_ImportOSMNetwork_Call {
+	return &MockService_ImportOSMNetwork_Call{Call: _e.mock.On("ImportOSMNetwork", ctx)}
+}
+
+func (_c *MockService_ImportOSMNetwork_Call) Run(run func(ctx context.Context)) *MockService_ImportOSMNetwork_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ImportOSMNetwork_Call) Return(_a0 error) *MockService_ImportOSMNetwork_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockService_ImportOSMNetwork_Call) RunAndReturn(run func(context.Context) error) *MockService_ImportOSMNetwork_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ImportOSMPOIs provides a mock function with given fields: ctx
+func (_m *MockService) ImportOSMPOIs(ctx context.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ImportOSMPOIs")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockService_ImportOSMPOIs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ImportOSMPOIs'
+type MockService_ImportOSMPOIs_Call struct {
+	*mock.Call
+}
+
+// ImportOSMPOIs is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ImportOSMPOIs(ctx interface{}) *MockService_ImportOSMPOIs_Call {
+	return &MockService_ImportOSMPOIs_Call{Call: _e.mock.On("ImportOSMPOIs", ctx)}
+}
+
+func (_c *MockService_ImportOSMPOIs_Call) Run(run func(ctx context.Context)) *MockService_ImportOSMPOIs_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ImportOSMPOIs_Call) Return(_a0 error) *MockService_ImportOSMPOIs_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockService_ImportOSMPOIs_Call) RunAndReturn(run func(context.Context) error) *MockService_ImportOSMPOIs_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ListPlaces provides a mock function with given fields: ctx, category, tag
 func (_m *MockService) ListPlaces(ctx context.Context, category string, tag string) ([]generated.Place, error) {
 	ret := _m.Called(ctx, category, tag)

@@ -157,6 +157,12 @@ type ServerInterface interface {
 	// Metro stops
 	// (GET /api/metro/stops)
 	MetroStopsGet(w http.ResponseWriter, r *http.Request)
+	// Trigger OSM network import
+	// (POST /api/osm/import)
+	OSMTrigger(w http.ResponseWriter, r *http.Request)
+	// Trigger OSM POI import
+	// (POST /api/osm/pois)
+	OSMPois(w http.ResponseWriter, r *http.Request)
 	// List places
 	// (GET /api/places)
 	PlacesList(w http.ResponseWriter, r *http.Request, params PlacesListParams)
@@ -208,6 +214,18 @@ func (_ Unimplemented) MetroShapesGet(w http.ResponseWriter, r *http.Request) {
 // Metro stops
 // (GET /api/metro/stops)
 func (_ Unimplemented) MetroStopsGet(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Trigger OSM network import
+// (POST /api/osm/import)
+func (_ Unimplemented) OSMTrigger(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Trigger OSM POI import
+// (POST /api/osm/pois)
+func (_ Unimplemented) OSMPois(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -394,6 +412,34 @@ func (siw *ServerInterfaceWrapper) MetroStopsGet(w http.ResponseWriter, r *http.
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.MetroStopsGet(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// OSMTrigger operation middleware
+func (siw *ServerInterfaceWrapper) OSMTrigger(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.OSMTrigger(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// OSMPois operation middleware
+func (siw *ServerInterfaceWrapper) OSMPois(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.OSMPois(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -771,6 +817,12 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/api/metro/stops", wrapper.MetroStopsGet)
 	})
 	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/api/osm/import", wrapper.OSMTrigger)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/api/osm/pois", wrapper.OSMPois)
+	})
+	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/api/places", wrapper.PlacesList)
 	})
 	r.Group(func(r chi.Router) {
@@ -858,6 +910,38 @@ type MetroStopsGet200JSONResponse GeoJSONFeatureCollection
 func (response MetroStopsGet200JSONResponse) VisitMetroStopsGetResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type OSMTriggerRequestObject struct {
+}
+
+type OSMTriggerResponseObject interface {
+	VisitOSMTriggerResponse(w http.ResponseWriter) error
+}
+
+type OSMTrigger202JSONResponse MessageResponse
+
+func (response OSMTrigger202JSONResponse) VisitOSMTriggerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(202)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type OSMPoisRequestObject struct {
+}
+
+type OSMPoisResponseObject interface {
+	VisitOSMPoisResponse(w http.ResponseWriter) error
+}
+
+type OSMPois202JSONResponse MessageResponse
+
+func (response OSMPois202JSONResponse) VisitOSMPoisResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(202)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -1093,6 +1177,12 @@ type StrictServerInterface interface {
 	// Metro stops
 	// (GET /api/metro/stops)
 	MetroStopsGet(ctx context.Context, request MetroStopsGetRequestObject) (MetroStopsGetResponseObject, error)
+	// Trigger OSM network import
+	// (POST /api/osm/import)
+	OSMTrigger(ctx context.Context, request OSMTriggerRequestObject) (OSMTriggerResponseObject, error)
+	// Trigger OSM POI import
+	// (POST /api/osm/pois)
+	OSMPois(ctx context.Context, request OSMPoisRequestObject) (OSMPoisResponseObject, error)
 	// List places
 	// (GET /api/places)
 	PlacesList(ctx context.Context, request PlacesListRequestObject) (PlacesListResponseObject, error)
@@ -1221,6 +1311,54 @@ func (sh *strictHandler) MetroStopsGet(w http.ResponseWriter, r *http.Request) {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(MetroStopsGetResponseObject); ok {
 		if err := validResponse.VisitMetroStopsGetResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// OSMTrigger operation middleware
+func (sh *strictHandler) OSMTrigger(w http.ResponseWriter, r *http.Request) {
+	var request OSMTriggerRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.OSMTrigger(ctx, request.(OSMTriggerRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "OSMTrigger")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(OSMTriggerResponseObject); ok {
+		if err := validResponse.VisitOSMTriggerResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// OSMPois operation middleware
+func (sh *strictHandler) OSMPois(w http.ResponseWriter, r *http.Request) {
+	var request OSMPoisRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.OSMPois(ctx, request.(OSMPoisRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "OSMPois")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(OSMPoisResponseObject); ok {
+		if err := validResponse.VisitOSMPoisResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

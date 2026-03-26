@@ -92,6 +92,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeoJSONFeatureCollection'
+  /api/osm/import:
+    post:
+      operationId: OSM_trigger
+      summary: Trigger OSM network import
+      description: Starts a background OpenStreetMap pedestrian network import and walkability scoring job for Sofia.
+      parameters: []
+      responses:
+        '202':
+          description: The request has been accepted for processing, but processing has not yet completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  /api/osm/pois:
+    post:
+      operationId: OSM_pois
+      summary: Trigger OSM POI import
+      description: Starts a background OpenStreetMap POI import (amenity, shop, tourism, leisure) and walk score recomputation for Sofia.
+      parameters: []
+      responses:
+        '202':
+          description: The request has been accepted for processing, but processing has not yet completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
   /api/places:
     get:
       operationId: Places_list

@@ -148,6 +148,22 @@ func (h *Handler) EnrichCreate(ctx context.Context, _ generated.EnrichCreateRequ
 	return generated.EnrichCreate202JSONResponse{Message: "enricher started"}, nil
 }
 
+func (h *Handler) OSMTrigger(ctx context.Context, _ generated.OSMTriggerRequestObject) (generated.OSMTriggerResponseObject, error) {
+	if err := h.app.ImportOSMNetwork(ctx); err != nil {
+		h.logger.Warn("osm import start failed", zap.Error(err))
+		return generated.OSMTrigger202JSONResponse{Message: err.Error()}, nil
+	}
+	return generated.OSMTrigger202JSONResponse{Message: "osm import started"}, nil
+}
+
+func (h *Handler) OSMPois(ctx context.Context, _ generated.OSMPoisRequestObject) (generated.OSMPoisResponseObject, error) {
+	if err := h.app.ImportOSMPOIs(ctx); err != nil {
+		h.logger.Warn("osm poi import start failed", zap.Error(err))
+		return generated.OSMPois202JSONResponse{Message: err.Error()}, nil
+	}
+	return generated.OSMPois202JSONResponse{Message: "osm poi import started"}, nil
+}
+
 // --- Health ---
 
 func (h *Handler) LivezGet(_ context.Context, _ generated.LivezGetRequestObject) (generated.LivezGetResponseObject, error) {

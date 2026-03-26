@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS osm_edges;
+DROP TABLE IF EXISTS osm_nodes;
