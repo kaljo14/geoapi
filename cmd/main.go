@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 
 	geopulseapi "github.com/neofyis/geopulse/api"
@@ -63,30 +63,9 @@ func main() {
 		w.Header().Set("Content-Type", "application/yaml")
 		_, _ = w.Write(geopulseapi.Spec)
 	})
-	r.Get("/docs", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		_, _ = fmt.Fprintf(w, `<!DOCTYPE html>
-<html>
-  <head>
-    <title>Geopulse API</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css">
-  </head>
-  <body>
-    <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
-    <script>
-      SwaggerUIBundle({
-        url: '/openapi.yaml',
-        dom_id: '#swagger-ui',
-        presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
-        layout: 'BaseLayout',
-      });
-    </script>
-  </body>
-</html>`)
-	})
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/openapi.yaml"),
+	))
 
 	port := os.Getenv("PORT")
 	if port == "" {

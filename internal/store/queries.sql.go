@@ -121,7 +121,7 @@ func (q *Queries) DeletePlace(ctx context.Context, placeID string) error {
 }
 
 const getMetroStops = `-- name: GetMetroStops :many
-SELECT stop_id, stop_name, stop_lat, stop_lon
+SELECT stop_id, stop_name, ST_Y(geom) AS stop_lat, ST_X(geom) AS stop_lon
 FROM gtfs_stops
 WHERE geom IS NOT NULL
 ORDER BY stop_name

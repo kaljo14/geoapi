@@ -24,6 +24,9 @@ func (a *App) GetMetroStops(ctx context.Context) (*generated.GeoJSONFeatureColle
 
 	features := make([]interface{}, 0, len(stops))
 	for _, s := range stops {
+		if !s.StopLat.Valid || !s.StopLon.Valid {
+			continue
+		}
 		features = append(features, map[string]interface{}{
 			"type": "Feature",
 			"geometry": map[string]interface{}{
