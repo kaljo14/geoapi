@@ -50,6 +50,22 @@ type LivezResponse struct {
 	Status string `json:"status"`
 }
 
+// LocationContext defines model for LocationContext.
+type LocationContext struct {
+	BusinessTurnoverProperties     *map[string]interface{} `json:"business_turnover_properties,omitempty"`
+	DevelopmentPotentialProperties *map[string]interface{} `json:"development_potential_properties,omitempty"`
+	InMetroCatchment               bool                    `json:"in_metro_catchment"`
+	IncomeProperties               *map[string]interface{} `json:"income_properties,omitempty"`
+	Lat                            float64                 `json:"lat"`
+	Lng                            float64                 `json:"lng"`
+	MetroCatchmentProperties       *map[string]interface{} `json:"metro_catchment_properties,omitempty"`
+	NeighborhoodProperties         *map[string]interface{} `json:"neighborhood_properties,omitempty"`
+	PedestrianProperties           *map[string]interface{} `json:"pedestrian_properties,omitempty"`
+	PopulationProperties           *map[string]interface{} `json:"population_properties,omitempty"`
+	PropertyPriceProperties        *map[string]interface{} `json:"property_price_properties,omitempty"`
+	ZoningProperties               *map[string]interface{} `json:"zoning_properties,omitempty"`
+}
+
 // MessageResponse defines model for MessageResponse.
 type MessageResponse struct {
 	Message string `json:"message"`
@@ -140,6 +156,12 @@ type SaturationGetParams struct {
 	Category *string  `form:"category,omitempty" json:"category,omitempty"`
 }
 
+// SofiaPlanContextParams defines parameters for SofiaPlanContext.
+type SofiaPlanContextParams struct {
+	Lat float64 `form:"lat" json:"lat"`
+	Lng float64 `form:"lng" json:"lng"`
+}
+
 // PlacesCreateJSONRequestBody defines body for PlacesCreate for application/json ContentType.
 type PlacesCreateJSONRequestBody = CreatePlaceRequest
 
@@ -181,6 +203,12 @@ type ServerInterface interface {
 	// Saturation score
 	// (GET /api/saturation)
 	SaturationGet(w http.ResponseWriter, r *http.Request, params SaturationGetParams)
+	// Location context
+	// (GET /api/sofiaplan/context)
+	SofiaPlanContext(w http.ResponseWriter, r *http.Request, params SofiaPlanContextParams)
+	// Trigger SofiaПлан import
+	// (POST /api/sofiaplan/import)
+	SofiaPlanTrigger(w http.ResponseWriter, r *http.Request)
 	// Trigger enricher
 	// (POST /enrich)
 	EnrichCreate(w http.ResponseWriter, r *http.Request)
@@ -262,6 +290,18 @@ func (_ Unimplemented) PlaceByIDUpdate(w http.ResponseWriter, r *http.Request, p
 // Saturation score
 // (GET /api/saturation)
 func (_ Unimplemented) SaturationGet(w http.ResponseWriter, r *http.Request, params SaturationGetParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Location context
+// (GET /api/sofiaplan/context)
+func (_ Unimplemented) SofiaPlanContext(w http.ResponseWriter, r *http.Request, params SofiaPlanContextParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Trigger SofiaПлан import
+// (POST /api/sofiaplan/import)
+func (_ Unimplemented) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -638,6 +678,69 @@ func (siw *ServerInterfaceWrapper) SaturationGet(w http.ResponseWriter, r *http.
 	handler.ServeHTTP(w, r)
 }
 
+// SofiaPlanContext operation middleware
+func (siw *ServerInterfaceWrapper) SofiaPlanContext(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SofiaPlanContextParams
+
+	// ------------- Required query parameter "lat" -------------
+
+	if paramValue := r.URL.Query().Get("lat"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "lat"})
+		return
+	}
+
+	err = runtime.BindQueryParameterWithOptions("form", false, true, "lat", r.URL.Query(), &params.Lat, runtime.BindQueryParameterOptions{Type: "number", Format: "double"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "lat", Err: err})
+		return
+	}
+
+	// ------------- Required query parameter "lng" -------------
+
+	if paramValue := r.URL.Query().Get("lng"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "lng"})
+		return
+	}
+
+	err = runtime.BindQueryParameterWithOptions("form", false, true, "lng", r.URL.Query(), &params.Lng, runtime.BindQueryParameterOptions{Type: "number", Format: "double"})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "lng", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SofiaPlanContext(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SofiaPlanTrigger operation middleware
+func (siw *ServerInterfaceWrapper) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SofiaPlanTrigger(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // EnrichCreate operation middleware
 func (siw *ServerInterfaceWrapper) EnrichCreate(w http.ResponseWriter, r *http.Request) {
 
@@ -839,6 +942,12 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/api/saturation", wrapper.SaturationGet)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/api/sofiaplan/context", wrapper.SofiaPlanContext)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/api/sofiaplan/import", wrapper.SofiaPlanTrigger)
 	})
 	r.Group(func(r chi.Router) {
 		r.Post(options.BaseURL+"/enrich", wrapper.EnrichCreate)
@@ -1093,6 +1202,48 @@ func (response SaturationGet400JSONResponse) VisitSaturationGetResponse(w http.R
 	return json.NewEncoder(w).Encode(response)
 }
 
+type SofiaPlanContextRequestObject struct {
+	Params SofiaPlanContextParams
+}
+
+type SofiaPlanContextResponseObject interface {
+	VisitSofiaPlanContextResponse(w http.ResponseWriter) error
+}
+
+type SofiaPlanContext200JSONResponse LocationContext
+
+func (response SofiaPlanContext200JSONResponse) VisitSofiaPlanContextResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type SofiaPlanContext400JSONResponse ErrorResponse
+
+func (response SofiaPlanContext400JSONResponse) VisitSofiaPlanContextResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type SofiaPlanTriggerRequestObject struct {
+}
+
+type SofiaPlanTriggerResponseObject interface {
+	VisitSofiaPlanTriggerResponse(w http.ResponseWriter) error
+}
+
+type SofiaPlanTrigger202JSONResponse MessageResponse
+
+func (response SofiaPlanTrigger202JSONResponse) VisitSofiaPlanTriggerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(202)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type EnrichCreateRequestObject struct {
 }
 
@@ -1201,6 +1352,12 @@ type StrictServerInterface interface {
 	// Saturation score
 	// (GET /api/saturation)
 	SaturationGet(ctx context.Context, request SaturationGetRequestObject) (SaturationGetResponseObject, error)
+	// Location context
+	// (GET /api/sofiaplan/context)
+	SofiaPlanContext(ctx context.Context, request SofiaPlanContextRequestObject) (SofiaPlanContextResponseObject, error)
+	// Trigger SofiaПлан import
+	// (POST /api/sofiaplan/import)
+	SofiaPlanTrigger(ctx context.Context, request SofiaPlanTriggerRequestObject) (SofiaPlanTriggerResponseObject, error)
 	// Trigger enricher
 	// (POST /enrich)
 	EnrichCreate(ctx context.Context, request EnrichCreateRequestObject) (EnrichCreateResponseObject, error)
@@ -1527,6 +1684,56 @@ func (sh *strictHandler) SaturationGet(w http.ResponseWriter, r *http.Request, p
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(SaturationGetResponseObject); ok {
 		if err := validResponse.VisitSaturationGetResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SofiaPlanContext operation middleware
+func (sh *strictHandler) SofiaPlanContext(w http.ResponseWriter, r *http.Request, params SofiaPlanContextParams) {
+	var request SofiaPlanContextRequestObject
+
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SofiaPlanContext(ctx, request.(SofiaPlanContextRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SofiaPlanContext")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SofiaPlanContextResponseObject); ok {
+		if err := validResponse.VisitSofiaPlanContextResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SofiaPlanTrigger operation middleware
+func (sh *strictHandler) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
+	var request SofiaPlanTriggerRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SofiaPlanTrigger(ctx, request.(SofiaPlanTriggerRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SofiaPlanTrigger")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SofiaPlanTriggerResponseObject); ok {
+		if err := validResponse.VisitSofiaPlanTriggerResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

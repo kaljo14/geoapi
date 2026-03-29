@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS sofiaplan_development_potential;
+DROP TABLE IF EXISTS sofiaplan_population_grid;
+DROP TABLE IF EXISTS sofiaplan_metro_catchments;
+DROP TABLE IF EXISTS sofiaplan_pedestrian_syntax;
+DROP TABLE IF EXISTS sofiaplan_property_prices;
+DROP TABLE IF EXISTS sofiaplan_business_turnover;
+DROP TABLE IF EXISTS sofiaplan_income;
+DROP TABLE IF EXISTS sofiaplan_zoning_params;
+DROP TABLE IF EXISTS sofiaplan_zoning;

@@ -1,0 +1,10 @@
+DROP VIEW IF EXISTS sofiaplan_residential_load_tiles;
+DROP VIEW IF EXISTS sofiaplan_population_potential_tiles;
+DROP VIEW IF EXISTS sofiaplan_demographic_forecast_ge_tiles;
+DROP VIEW IF EXISTS sofiaplan_demographic_forecast_tiles;
+DROP VIEW IF EXISTS sofiaplan_census_addresses_tiles;
+DROP TABLE IF EXISTS sofiaplan_residential_load;
+DROP TABLE IF EXISTS sofiaplan_population_potential;
+DROP TABLE IF EXISTS sofiaplan_demographic_forecast_ge;
+DROP TABLE IF EXISTS sofiaplan_demographic_forecast;
+DROP TABLE IF EXISTS sofiaplan_census_addresses;

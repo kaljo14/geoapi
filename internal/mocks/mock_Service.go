@@ -479,6 +479,66 @@ func (_c *MockService_GetSaturation_Call) RunAndReturn(run func(context.Context,
 	return _c
 }
 
+// GetSofiaplanContext provides a mock function with given fields: ctx, lat, lng
+func (_m *MockService) GetSofiaplanContext(ctx context.Context, lat float64, lng float64) (*generated.LocationContext, error) {
+	ret := _m.Called(ctx, lat, lng)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSofiaplanContext")
+	}
+
+	var r0 *generated.LocationContext
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (*generated.LocationContext, error)); ok {
+		return rf(ctx, lat, lng)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) *generated.LocationContext); ok {
+		r0 = rf(ctx, lat, lng)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.LocationContext)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lat, lng)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_GetSofiaplanContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSofiaplanContext'
+type MockService_GetSofiaplanContext_Call struct {
+	*mock.Call
+}
+
+// GetSofiaplanContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lat float64
+//   - lng float64
+func (_e *MockService_Expecter) GetSofiaplanContext(ctx interface{}, lat interface{}, lng interface{}) *MockService_GetSofiaplanContext_Call {
+	return &MockService_GetSofiaplanContext_Call{Call: _e.mock.On("GetSofiaplanContext", ctx, lat, lng)}
+}
+
+func (_c *MockService_GetSofiaplanContext_Call) Run(run func(ctx context.Context, lat float64, lng float64)) *MockService_GetSofiaplanContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockService_GetSofiaplanContext_Call) Return(_a0 *generated.LocationContext, _a1 error) *MockService_GetSofiaplanContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_GetSofiaplanContext_Call) RunAndReturn(run func(context.Context, float64, float64) (*generated.LocationContext, error)) *MockService_GetSofiaplanContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ImportCSV provides a mock function with given fields: ctx, r
 func (_m *MockService) ImportCSV(ctx context.Context, r io.Reader) (int, error) {
 	ret := _m.Called(ctx, r)
@@ -624,6 +684,52 @@ func (_c *MockService_ImportOSMPOIs_Call) Return(_a0 error) *MockService_ImportO
 }
 
 func (_c *MockService_ImportOSMPOIs_Call) RunAndReturn(run func(context.Context) error) *MockService_ImportOSMPOIs_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ImportSofiaplan provides a mock function with given fields: ctx
+func (_m *MockService) ImportSofiaplan(ctx context.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ImportSofiaplan")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockService_ImportSofiaplan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ImportSofiaplan'
+type MockService_ImportSofiaplan_Call struct {
+	*mock.Call
+}
+
+// ImportSofiaplan is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ImportSofiaplan(ctx interface{}) *MockService_ImportSofiaplan_Call {
+	return &MockService_ImportSofiaplan_Call{Call: _e.mock.On("ImportSofiaplan", ctx)}
+}
+
+func (_c *MockService_ImportSofiaplan_Call) Run(run func(ctx context.Context)) *MockService_ImportSofiaplan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ImportSofiaplan_Call) Return(_a0 error) *MockService_ImportSofiaplan_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockService_ImportSofiaplan_Call) RunAndReturn(run func(context.Context) error) *MockService_ImportSofiaplan_Call {
 	_c.Call.Return(run)
 	return _c
 }

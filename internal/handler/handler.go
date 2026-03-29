@@ -164,6 +164,25 @@ func (h *Handler) OSMPois(ctx context.Context, _ generated.OSMPoisRequestObject)
 	return generated.OSMPois202JSONResponse{Message: "osm poi import started"}, nil
 }
 
+// --- SofiaPlan ---
+
+func (h *Handler) SofiaPlanTrigger(ctx context.Context, _ generated.SofiaPlanTriggerRequestObject) (generated.SofiaPlanTriggerResponseObject, error) {
+	if err := h.app.ImportSofiaplan(ctx); err != nil {
+		h.logger.Warn("sofiaplan import start failed", zap.Error(err))
+		return generated.SofiaPlanTrigger202JSONResponse{Message: err.Error()}, nil
+	}
+	return generated.SofiaPlanTrigger202JSONResponse{Message: "sofiaplan import started"}, nil
+}
+
+func (h *Handler) SofiaPlanContext(ctx context.Context, req generated.SofiaPlanContextRequestObject) (generated.SofiaPlanContextResponseObject, error) {
+	result, err := h.app.GetSofiaplanContext(ctx, req.Params.Lat, req.Params.Lng)
+	if err != nil {
+		h.logger.Error("sofiaplan context failed", zap.Error(err))
+		return generated.SofiaPlanContext400JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.SofiaPlanContext200JSONResponse(*result), nil
+}
+
 // --- Health ---
 
 func (h *Handler) LivezGet(_ context.Context, _ generated.LivezGetRequestObject) (generated.LivezGetResponseObject, error) {

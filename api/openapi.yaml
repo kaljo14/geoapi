@@ -287,6 +287,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/sofiaplan/context:
+    get:
+      operationId: SofiaPlan_context
+      summary: Location context
+      description: Returns zoning, income, metro catchment, and pedestrian data for a given lat/lng point.
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+          explode: false
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationContext'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/sofiaplan/import:
+    post:
+      operationId: SofiaPlan_trigger
+      summary: Trigger SofiaПлан import
+      description: Starts a background import of all 9 SofiaПлан datasets from api.sofiaplan.bg into PostGIS.
+      parameters: []
+      responses:
+        '202':
+          description: The request has been accepted for processing, but processing has not yet completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
   /enrich:
     post:
       operationId: Enrich_create
@@ -420,6 +466,48 @@ components:
       properties:
         status:
           type: string
+    LocationContext:
+      type: object
+      required:
+        - lat
+        - lng
+        - in_metro_catchment
+      properties:
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        in_metro_catchment:
+          type: boolean
+        zoning_properties:
+          type: object
+          additionalProperties: {}
+        income_properties:
+          type: object
+          additionalProperties: {}
+        metro_catchment_properties:
+          type: object
+          additionalProperties: {}
+        pedestrian_properties:
+          type: object
+          additionalProperties: {}
+        population_properties:
+          type: object
+          additionalProperties: {}
+        property_price_properties:
+          type: object
+          additionalProperties: {}
+        business_turnover_properties:
+          type: object
+          additionalProperties: {}
+        development_potential_properties:
+          type: object
+          additionalProperties: {}
+        neighborhood_properties:
+          type: object
+          additionalProperties: {}
     MessageResponse:
       type: object
       required:

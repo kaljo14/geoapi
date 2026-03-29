@@ -32,6 +32,8 @@ type Service interface {
 	StartEnricher(ctx context.Context) error
 	ImportOSMNetwork(ctx context.Context) error
 	ImportOSMPOIs(ctx context.Context) error
+	ImportSofiaplan(ctx context.Context) error
+	GetSofiaplanContext(ctx context.Context, lat, lng float64) (*generated.LocationContext, error)
 	ExportCSV(ctx context.Context, w io.Writer, simple bool) error
 	ImportCSV(ctx context.Context, r io.Reader) (int, error)
 	Ready(ctx context.Context) error

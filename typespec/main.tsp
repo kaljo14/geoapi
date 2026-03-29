@@ -102,6 +102,21 @@ model MessageResponse {
   message: string;
 }
 
+model LocationContext {
+  lat: float64;
+  lng: float64;
+  in_metro_catchment: boolean;
+  zoning_properties?: Record<unknown>;
+  income_properties?: Record<unknown>;
+  metro_catchment_properties?: Record<unknown>;
+  pedestrian_properties?: Record<unknown>;
+  population_properties?: Record<unknown>;
+  property_price_properties?: Record<unknown>;
+  business_turnover_properties?: Record<unknown>;
+  development_potential_properties?: Record<unknown>;
+  neighborhood_properties?: Record<unknown>;
+}
+
 // --- Routes ---
 
 @route("/api/places")
@@ -239,6 +254,30 @@ interface OSM {
   pois(): {
     @statusCode statusCode: 202;
     @body body: MessageResponse;
+  };
+}
+
+@route("/api/sofiaplan")
+interface SofiaPlan {
+  @post
+  @route("/import")
+  @summary("Trigger SofiaПлан import")
+  @doc("Starts a background import of all 9 SofiaПлан datasets from api.sofiaplan.bg into PostGIS.")
+  trigger(): {
+    @statusCode statusCode: 202;
+    @body body: MessageResponse;
+  };
+
+  @get
+  @route("/context")
+  @summary("Location context")
+  @doc("Returns zoning, income, metro catchment, and pedestrian data for a given lat/lng point.")
+  context(
+    @query lat: float64,
+    @query lng: float64,
+  ): LocationContext | {
+    @statusCode statusCode: 400;
+    @body body: ErrorResponse;
   };
 }
 

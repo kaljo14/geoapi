@@ -1,0 +1,9 @@
+DROP VIEW IF EXISTS sofiaplan_neighborhoods_tiles;
+DROP VIEW IF EXISTS sofiaplan_income_tiles;
+DROP VIEW IF EXISTS sofiaplan_zoning_tiles;
+DROP VIEW IF EXISTS sofiaplan_business_turnover_tiles;
+DROP VIEW IF EXISTS sofiaplan_property_prices_tiles;
+DROP VIEW IF EXISTS sofiaplan_pedestrian_syntax_tiles;
+DROP VIEW IF EXISTS sofiaplan_metro_catchments_tiles;
+DROP VIEW IF EXISTS sofiaplan_population_grid_tiles;
+DROP VIEW IF EXISTS sofiaplan_development_potential_tiles;
