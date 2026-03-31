@@ -62,6 +62,9 @@ var sofiaplanDatasets = []sofiaplanDataset{
 	{606, "sofiaplan_cycling_network"},     // Built cycling network (primary)
 	{290, "sofiaplan_cycling_network_alt"}, // Built cycling network (alternate)
 	{146, "sofiaplan_cycling_planned"},     // Planned cycling extensions
+	// Health services
+	{597, "sofiaplan_health_service_concentration"},         // Health service concentration
+	{598, "sofiaplan_health_infrastructure_concentration"}, // Health infrastructure concentration by GE
 }
 
 // batchSize controls how many features are inserted per SQL statement.

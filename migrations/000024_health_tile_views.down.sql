@@ -1,0 +1,2 @@
+DROP VIEW IF EXISTS sofiaplan_health_service_concentration_tiles;
+DROP VIEW IF EXISTS sofiaplan_health_infrastructure_concentration_tiles;

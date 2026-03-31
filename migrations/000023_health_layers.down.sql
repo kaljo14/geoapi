@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS sofiaplan_health_service_concentration;
+DROP TABLE IF EXISTS sofiaplan_health_infrastructure_concentration;
