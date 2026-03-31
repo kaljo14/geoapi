@@ -1750,6 +1750,122 @@ func (_c *MockStore_UpsertPlace_Call) RunAndReturn(run func(context.Context, sto
 	return _c
 }
 
+// ListParkingZones provides a mock function with given fields: ctx
+func (_m *MockStore) ListParkingZones(ctx context.Context) ([]store.ParkingZone, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListParkingZones")
+	}
+
+	var r0 []store.ParkingZone
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.ParkingZone, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.ParkingZone); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.ParkingZone)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ListParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListParkingZones'
+type MockStore_ListParkingZones_Call struct {
+	*mock.Call
+}
+
+// ListParkingZones is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ListParkingZones(ctx interface{}) *MockStore_ListParkingZones_Call {
+	return &MockStore_ListParkingZones_Call{Call: _e.mock.On("ListParkingZones", ctx)}
+}
+
+func (_c *MockStore_ListParkingZones_Call) Run(run func(ctx context.Context)) *MockStore_ListParkingZones_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ListParkingZones_Call) Return(_a0 []store.ParkingZone, _a1 error) *MockStore_ListParkingZones_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ListParkingZones_Call) RunAndReturn(run func(context.Context) ([]store.ParkingZone, error)) *MockStore_ListParkingZones_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ParkingZonesGeoJSON provides a mock function with given fields: ctx
+func (_m *MockStore) ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ParkingZonesGeoJSON")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (json.RawMessage, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) json.RawMessage); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ParkingZonesGeoJSON_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ParkingZonesGeoJSON'
+type MockStore_ParkingZonesGeoJSON_Call struct {
+	*mock.Call
+}
+
+// ParkingZonesGeoJSON is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ParkingZonesGeoJSON(ctx interface{}) *MockStore_ParkingZonesGeoJSON_Call {
+	return &MockStore_ParkingZonesGeoJSON_Call{Call: _e.mock.On("ParkingZonesGeoJSON", ctx)}
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) Run(run func(ctx context.Context)) *MockStore_ParkingZonesGeoJSON_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_ParkingZonesGeoJSON_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) RunAndReturn(run func(context.Context) (json.RawMessage, error)) *MockStore_ParkingZonesGeoJSON_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewMockStore creates a new instance of MockStore. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockStore(t interface {

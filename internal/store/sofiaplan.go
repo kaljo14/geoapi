@@ -47,6 +47,29 @@ FROM unnest($1::text[], $2::text[]) AS p(props, geom_json)
 `, tableName, geomExpr)
 }
 
+// ListNeighborhoodNames returns all neighbourhood names (kvname) sorted alphabetically.
+func (q *Queries) ListNeighborhoodNames(ctx context.Context) ([]string, error) {
+	rows, err := q.db.Query(ctx, `
+		SELECT DISTINCT (properties->>'kvname') AS name
+		FROM sofiaplan_neighborhoods
+		WHERE properties->>'kvname' IS NOT NULL
+		ORDER BY name
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("list neighborhood names: %w", err)
+	}
+	defer rows.Close()
+	var names []string
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		names = append(names, name)
+	}
+	return names, rows.Err()
+}
+
 // --- Context queries ---
 
 const zoningContextSQL = `

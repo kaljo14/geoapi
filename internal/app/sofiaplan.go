@@ -16,6 +16,10 @@ import (
 	"github.com/neofyis/geopulse/internal/store"
 )
 
+func (a *App) ListNeighborhoods(ctx context.Context) ([]string, error) {
+	return a.store.ListNeighborhoodNames(ctx)
+}
+
 const sofiaplanBaseURL = "https://api.sofiaplan.bg/datasets"
 
 // sofiaplanDataset maps a dataset ID to its target PostGIS table.
@@ -40,25 +44,51 @@ var sofiaplanDatasets = []sofiaplanDataset{
 	{360, "sofiaplan_demographic_forecast_ge"},
 	{622, "sofiaplan_population_potential"},
 	{621, "sofiaplan_residential_load"},
+	// Accessibility & Transport datasets
+	{96, "sofiaplan_transit_access_ge"},
+	{279, "sofiaplan_transit_access_district"},
+	{289, "sofiaplan_metro_access_800m"},
+	{282, "sofiaplan_metro_access_1200m"},
+	{268, "sofiaplan_bus_lines"},
+	{333, "sofiaplan_bus_lines_alt"},
+	{223, "sofiaplan_trolleybus_lines"},
+	{472, "sofiaplan_tram_lines"},
+	{254, "sofiaplan_tram_lines_alt"},
+	{602, "sofiaplan_railway_stations"},
+	// Parking zones from ЦГМ
+	{470, "sofiaplan_parking_green"}, // Зелена зона за паркиране
+	{291, "sofiaplan_parking_blue"},  // Синя зона за паркиране
+	// Cycling network
+	{606, "sofiaplan_cycling_network"},     // Built cycling network (primary)
+	{290, "sofiaplan_cycling_network_alt"}, // Built cycling network (alternate)
+	{146, "sofiaplan_cycling_planned"},     // Planned cycling extensions
 }
 
 // batchSize controls how many features are inserted per SQL statement.
 // Kept small enough to avoid memory pressure on the 398MB pedestrian dataset.
 const batchSize = 500
 
-// ImportSofiaplan starts a background import of all 9 SofiaПлан datasets.
-func (a *App) ImportSofiaplan(_ context.Context) error {
+// ImportSofiaplan starts a background import. If layer is non-empty only that
+// table is imported; otherwise every dataset in sofiaplanDatasets is imported.
+func (a *App) ImportSofiaplan(_ context.Context, layer string) error {
 	go func() {
-		a.logger.Info("sofiaplan import started")
-		if err := a.runSofiaplanImport(context.Background()); err != nil {
+		if layer != "" {
+			a.logger.Info("sofiaplan single-layer import started", zap.String("layer", layer))
+		} else {
+			a.logger.Info("sofiaplan full import started")
+		}
+		if err := a.runSofiaplanImport(context.Background(), layer); err != nil {
 			a.logger.Error("sofiaplan import failed", zap.Error(err))
 		}
 	}()
 	return nil
 }
 
-func (a *App) runSofiaplanImport(ctx context.Context) error {
+func (a *App) runSofiaplanImport(ctx context.Context, layer string) error {
 	for _, ds := range sofiaplanDatasets {
+		if layer != "" && ds.tableName != layer {
+			continue
+		}
 		if err := a.importDataset(ctx, ds); err != nil {
 			a.logger.Error("sofiaplan dataset import failed",
 				zap.Int("dataset_id", ds.id),

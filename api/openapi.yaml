@@ -118,6 +118,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+  /api/parking-zones:
+    get:
+      operationId: ParkingZones_get
+      summary: Parking zones
+      description: Returns Sofia paid parking zones as GeoJSON FeatureCollection with zone_id, name, and color properties.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeoJSONFeatureCollection'
   /api/places:
     get:
       operationId: Places_list
@@ -324,8 +337,20 @@ paths:
     post:
       operationId: SofiaPlan_trigger
       summary: Trigger SofiaПлан import
-      description: Starts a background import of all 9 SofiaПлан datasets from api.sofiaplan.bg into PostGIS.
-      parameters: []
+      description: Starts a background import of SofiaПлан datasets. Pass `layer=<table_name>` to import a single layer, or `all=true` (default) to import every layer.
+      parameters:
+        - name: all
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+        - name: layer
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
       responses:
         '202':
           description: The request has been accepted for processing, but processing has not yet completed.

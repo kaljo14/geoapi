@@ -54,6 +54,7 @@ func main() {
 	generated.HandlerWithOptions(generated.NewStrictHandler(h, nil), generated.ChiServerOptions{
 		BaseRouter: r,
 	})
+	r.Get("/api/sofiaplan/neighborhoods", h.GetNeighborhoods)
 	r.Get("/api/places/export", h.ExportPlaces)
 	r.Get("/api/places/export-simple", h.ExportPlacesSimple)
 	r.Post("/api/places/import", h.ImportPlaces)

@@ -242,6 +242,64 @@ func (_c *MockService_GetHeatmap_Call) RunAndReturn(run func(context.Context, fl
 	return _c
 }
 
+// GetParkingZones provides a mock function with given fields: ctx
+func (_m *MockService) GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetParkingZones")
+	}
+
+	var r0 *generated.GeoJSONFeatureCollection
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (*generated.GeoJSONFeatureCollection, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) *generated.GeoJSONFeatureCollection); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.GeoJSONFeatureCollection)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_GetParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetParkingZones'
+type MockService_GetParkingZones_Call struct {
+	*mock.Call
+}
+
+// GetParkingZones is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) GetParkingZones(ctx interface{}) *MockService_GetParkingZones_Call {
+	return &MockService_GetParkingZones_Call{Call: _e.mock.On("GetParkingZones", ctx)}
+}
+
+func (_c *MockService_GetParkingZones_Call) Run(run func(ctx context.Context)) *MockService_GetParkingZones_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_GetParkingZones_Call) Return(_a0 *generated.GeoJSONFeatureCollection, _a1 error) *MockService_GetParkingZones_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_GetParkingZones_Call) RunAndReturn(run func(context.Context) (*generated.GeoJSONFeatureCollection, error)) *MockService_GetParkingZones_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetMetroShapes provides a mock function with given fields: ctx
 func (_m *MockService) GetMetroShapes(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
 	ret := _m.Called(ctx)
@@ -688,17 +746,17 @@ func (_c *MockService_ImportOSMPOIs_Call) RunAndReturn(run func(context.Context)
 	return _c
 }
 
-// ImportSofiaplan provides a mock function with given fields: ctx
-func (_m *MockService) ImportSofiaplan(ctx context.Context) error {
-	ret := _m.Called(ctx)
+// ImportSofiaplan provides a mock function with given fields: ctx, layer
+func (_m *MockService) ImportSofiaplan(ctx context.Context, layer string) error {
+	ret := _m.Called(ctx, layer)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ImportSofiaplan")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
-		r0 = rf(ctx)
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, layer)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -713,13 +771,14 @@ type MockService_ImportSofiaplan_Call struct {
 
 // ImportSofiaplan is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockService_Expecter) ImportSofiaplan(ctx interface{}) *MockService_ImportSofiaplan_Call {
-	return &MockService_ImportSofiaplan_Call{Call: _e.mock.On("ImportSofiaplan", ctx)}
+//   - layer string
+func (_e *MockService_Expecter) ImportSofiaplan(ctx interface{}, layer interface{}) *MockService_ImportSofiaplan_Call {
+	return &MockService_ImportSofiaplan_Call{Call: _e.mock.On("ImportSofiaplan", ctx, layer)}
 }
 
-func (_c *MockService_ImportSofiaplan_Call) Run(run func(ctx context.Context)) *MockService_ImportSofiaplan_Call {
+func (_c *MockService_ImportSofiaplan_Call) Run(run func(ctx context.Context, layer string)) *MockService_ImportSofiaplan_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
+		run(args[0].(context.Context), args[1].(string))
 	})
 	return _c
 }
@@ -729,7 +788,7 @@ func (_c *MockService_ImportSofiaplan_Call) Return(_a0 error) *MockService_Impor
 	return _c
 }
 
-func (_c *MockService_ImportSofiaplan_Call) RunAndReturn(run func(context.Context) error) *MockService_ImportSofiaplan_Call {
+func (_c *MockService_ImportSofiaplan_Call) RunAndReturn(run func(context.Context, string) error) *MockService_ImportSofiaplan_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -1,0 +1,10 @@
+DROP VIEW IF EXISTS sofiaplan_railway_stations_tiles;
+DROP VIEW IF EXISTS sofiaplan_tram_lines_alt_tiles;
+DROP VIEW IF EXISTS sofiaplan_tram_lines_tiles;
+DROP VIEW IF EXISTS sofiaplan_trolleybus_lines_tiles;
+DROP VIEW IF EXISTS sofiaplan_bus_lines_alt_tiles;
+DROP VIEW IF EXISTS sofiaplan_bus_lines_tiles;
+DROP VIEW IF EXISTS sofiaplan_metro_access_1200m_tiles;
+DROP VIEW IF EXISTS sofiaplan_metro_access_800m_tiles;
+DROP VIEW IF EXISTS sofiaplan_transit_access_district_tiles;
+DROP VIEW IF EXISTS sofiaplan_transit_access_ge_tiles;

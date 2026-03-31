@@ -27,6 +27,9 @@ type Store interface {
 	GetPopulationContext(ctx context.Context, lng, lat float64) (json.RawMessage, error)
 	GetDevelopmentPotentialContext(ctx context.Context, lng, lat float64) (json.RawMessage, error)
 	GetNeighborhoodContext(ctx context.Context, lng, lat float64) (json.RawMessage, error)
+	ListNeighborhoodNames(ctx context.Context) ([]string, error)
+	ListParkingZones(ctx context.Context) ([]ParkingZone, error)
+	ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error)
 }
 
 var _ Store = (*Queries)(nil)

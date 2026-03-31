@@ -262,8 +262,8 @@ interface SofiaPlan {
   @post
   @route("/import")
   @summary("Trigger SofiaПлан import")
-  @doc("Starts a background import of all 9 SofiaПлан datasets from api.sofiaplan.bg into PostGIS.")
-  trigger(): {
+  @doc("Starts a background import of SofiaПлан datasets. Pass `layer=<table_name>` to import a single layer, or `all=true` (default) to import every layer.")
+  trigger(@query all?: boolean, @query layer?: string): {
     @statusCode statusCode: 202;
     @body body: MessageResponse;
   };
@@ -279,6 +279,14 @@ interface SofiaPlan {
     @statusCode statusCode: 400;
     @body body: ErrorResponse;
   };
+}
+
+@route("/api/parking-zones")
+interface ParkingZones {
+  @get
+  @summary("Parking zones")
+  @doc("Returns Sofia paid parking zones as GeoJSON FeatureCollection with zone_id, name, and color properties.")
+  get(): GeoJSONFeatureCollection;
 }
 
 @route("/livez")

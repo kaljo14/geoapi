@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS sofiaplan_railway_stations;
+DROP TABLE IF EXISTS sofiaplan_tram_lines_alt;
+DROP TABLE IF EXISTS sofiaplan_tram_lines;
+DROP TABLE IF EXISTS sofiaplan_trolleybus_lines;
+DROP TABLE IF EXISTS sofiaplan_bus_lines_alt;
+DROP TABLE IF EXISTS sofiaplan_bus_lines;
+DROP TABLE IF EXISTS sofiaplan_metro_access_1200m;
+DROP TABLE IF EXISTS sofiaplan_metro_access_800m;
+DROP TABLE IF EXISTS sofiaplan_transit_access_district;
+DROP TABLE IF EXISTS sofiaplan_transit_access_ge;

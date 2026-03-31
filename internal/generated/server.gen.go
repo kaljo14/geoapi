@@ -162,6 +162,12 @@ type SofiaPlanContextParams struct {
 	Lng float64 `form:"lng" json:"lng"`
 }
 
+// SofiaPlanTriggerParams defines parameters for SofiaPlanTrigger.
+type SofiaPlanTriggerParams struct {
+	All   *bool   `form:"all,omitempty" json:"all,omitempty"`
+	Layer *string `form:"layer,omitempty" json:"layer,omitempty"`
+}
+
 // PlacesCreateJSONRequestBody defines body for PlacesCreate for application/json ContentType.
 type PlacesCreateJSONRequestBody = CreatePlaceRequest
 
@@ -185,6 +191,9 @@ type ServerInterface interface {
 	// Trigger OSM POI import
 	// (POST /api/osm/pois)
 	OSMPois(w http.ResponseWriter, r *http.Request)
+	// Parking zones
+	// (GET /api/parking-zones)
+	ParkingZonesGet(w http.ResponseWriter, r *http.Request)
 	// List places
 	// (GET /api/places)
 	PlacesList(w http.ResponseWriter, r *http.Request, params PlacesListParams)
@@ -208,7 +217,7 @@ type ServerInterface interface {
 	SofiaPlanContext(w http.ResponseWriter, r *http.Request, params SofiaPlanContextParams)
 	// Trigger SofiaПлан import
 	// (POST /api/sofiaplan/import)
-	SofiaPlanTrigger(w http.ResponseWriter, r *http.Request)
+	SofiaPlanTrigger(w http.ResponseWriter, r *http.Request, params SofiaPlanTriggerParams)
 	// Trigger enricher
 	// (POST /enrich)
 	EnrichCreate(w http.ResponseWriter, r *http.Request)
@@ -257,6 +266,12 @@ func (_ Unimplemented) OSMPois(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
+// Parking zones
+// (GET /api/parking-zones)
+func (_ Unimplemented) ParkingZonesGet(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
 // List places
 // (GET /api/places)
 func (_ Unimplemented) PlacesList(w http.ResponseWriter, r *http.Request, params PlacesListParams) {
@@ -301,7 +316,7 @@ func (_ Unimplemented) SofiaPlanContext(w http.ResponseWriter, r *http.Request, 
 
 // Trigger SofiaПлан import
 // (POST /api/sofiaplan/import)
-func (_ Unimplemented) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request, params SofiaPlanTriggerParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -480,6 +495,20 @@ func (siw *ServerInterfaceWrapper) OSMPois(w http.ResponseWriter, r *http.Reques
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.OSMPois(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ParkingZonesGet operation middleware
+func (siw *ServerInterfaceWrapper) ParkingZonesGet(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ParkingZonesGet(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -730,8 +759,29 @@ func (siw *ServerInterfaceWrapper) SofiaPlanContext(w http.ResponseWriter, r *ht
 // SofiaPlanTrigger operation middleware
 func (siw *ServerInterfaceWrapper) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
 
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SofiaPlanTriggerParams
+
+	// ------------- Optional query parameter "all" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", false, false, "all", r.URL.Query(), &params.All, runtime.BindQueryParameterOptions{Type: "boolean", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "all", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "layer" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", false, false, "layer", r.URL.Query(), &params.Layer, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "layer", Err: err})
+		return
+	}
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.SofiaPlanTrigger(w, r)
+		siw.Handler.SofiaPlanTrigger(w, r, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -926,6 +976,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Post(options.BaseURL+"/api/osm/pois", wrapper.OSMPois)
 	})
 	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/api/parking-zones", wrapper.ParkingZonesGet)
+	})
+	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/api/places", wrapper.PlacesList)
 	})
 	r.Group(func(r chi.Router) {
@@ -1051,6 +1104,22 @@ type OSMPois202JSONResponse MessageResponse
 func (response OSMPois202JSONResponse) VisitOSMPoisResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(202)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type ParkingZonesGetRequestObject struct {
+}
+
+type ParkingZonesGetResponseObject interface {
+	VisitParkingZonesGetResponse(w http.ResponseWriter) error
+}
+
+type ParkingZonesGet200JSONResponse GeoJSONFeatureCollection
+
+func (response ParkingZonesGet200JSONResponse) VisitParkingZonesGetResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -1229,6 +1298,7 @@ func (response SofiaPlanContext400JSONResponse) VisitSofiaPlanContextResponse(w 
 }
 
 type SofiaPlanTriggerRequestObject struct {
+	Params SofiaPlanTriggerParams
 }
 
 type SofiaPlanTriggerResponseObject interface {
@@ -1334,6 +1404,9 @@ type StrictServerInterface interface {
 	// Trigger OSM POI import
 	// (POST /api/osm/pois)
 	OSMPois(ctx context.Context, request OSMPoisRequestObject) (OSMPoisResponseObject, error)
+	// Parking zones
+	// (GET /api/parking-zones)
+	ParkingZonesGet(ctx context.Context, request ParkingZonesGetRequestObject) (ParkingZonesGetResponseObject, error)
 	// List places
 	// (GET /api/places)
 	PlacesList(ctx context.Context, request PlacesListRequestObject) (PlacesListResponseObject, error)
@@ -1516,6 +1589,30 @@ func (sh *strictHandler) OSMPois(w http.ResponseWriter, r *http.Request) {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(OSMPoisResponseObject); ok {
 		if err := validResponse.VisitOSMPoisResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ParkingZonesGet operation middleware
+func (sh *strictHandler) ParkingZonesGet(w http.ResponseWriter, r *http.Request) {
+	var request ParkingZonesGetRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ParkingZonesGet(ctx, request.(ParkingZonesGetRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ParkingZonesGet")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ParkingZonesGetResponseObject); ok {
+		if err := validResponse.VisitParkingZonesGetResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -1718,8 +1815,10 @@ func (sh *strictHandler) SofiaPlanContext(w http.ResponseWriter, r *http.Request
 }
 
 // SofiaPlanTrigger operation middleware
-func (sh *strictHandler) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request) {
+func (sh *strictHandler) SofiaPlanTrigger(w http.ResponseWriter, r *http.Request, params SofiaPlanTriggerParams) {
 	var request SofiaPlanTriggerRequestObject
+
+	request.Params = params
 
 	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
 		return sh.ssi.SofiaPlanTrigger(ctx, request.(SofiaPlanTriggerRequestObject))

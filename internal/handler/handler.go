@@ -74,6 +74,20 @@ func (h *Handler) PlaceByIDDelete(ctx context.Context, req generated.PlaceByIDDe
 	return generated.PlaceByIDDelete204Response{}, nil
 }
 
+// --- Sofiaplan ---
+
+func (h *Handler) GetNeighborhoods(w http.ResponseWriter, r *http.Request) {
+	names, err := h.app.ListNeighborhoods(r.Context())
+	if err != nil {
+		h.logger.Error("list neighborhoods failed", zap.Error(err))
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	_ = json.NewEncoder(w).Encode(names)
+}
+
 // --- Metro ---
 
 func (h *Handler) MetroShapesGet(ctx context.Context, _ generated.MetroShapesGetRequestObject) (generated.MetroShapesGetResponseObject, error) {
@@ -92,6 +106,17 @@ func (h *Handler) MetroStopsGet(ctx context.Context, _ generated.MetroStopsGetRe
 		return nil, err
 	}
 	return generated.MetroStopsGet200JSONResponse(*fc), nil
+}
+
+// --- Parking Zones ---
+
+func (h *Handler) ParkingZonesGet(ctx context.Context, _ generated.ParkingZonesGetRequestObject) (generated.ParkingZonesGetResponseObject, error) {
+	fc, err := h.app.GetParkingZones(ctx)
+	if err != nil {
+		h.logger.Error("get parking zones failed", zap.Error(err))
+		return nil, err
+	}
+	return generated.ParkingZonesGet200JSONResponse(*fc), nil
 }
 
 // --- Analytics ---
@@ -166,12 +191,20 @@ func (h *Handler) OSMPois(ctx context.Context, _ generated.OSMPoisRequestObject)
 
 // --- SofiaPlan ---
 
-func (h *Handler) SofiaPlanTrigger(ctx context.Context, _ generated.SofiaPlanTriggerRequestObject) (generated.SofiaPlanTriggerResponseObject, error) {
-	if err := h.app.ImportSofiaplan(ctx); err != nil {
+func (h *Handler) SofiaPlanTrigger(ctx context.Context, req generated.SofiaPlanTriggerRequestObject) (generated.SofiaPlanTriggerResponseObject, error) {
+	layer := ""
+	if req.Params.Layer != nil {
+		layer = *req.Params.Layer
+	}
+	if err := h.app.ImportSofiaplan(ctx, layer); err != nil {
 		h.logger.Warn("sofiaplan import start failed", zap.Error(err))
 		return generated.SofiaPlanTrigger202JSONResponse{Message: err.Error()}, nil
 	}
-	return generated.SofiaPlanTrigger202JSONResponse{Message: "sofiaplan import started"}, nil
+	msg := "sofiaplan import started"
+	if layer != "" {
+		msg = "sofiaplan import started for layer: " + layer
+	}
+	return generated.SofiaPlanTrigger202JSONResponse{Message: msg}, nil
 }
 
 func (h *Handler) SofiaPlanContext(ctx context.Context, req generated.SofiaPlanContextRequestObject) (generated.SofiaPlanContextResponseObject, error) {
