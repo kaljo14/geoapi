@@ -533,6 +533,18 @@ components:
         neighborhood_properties:
           type: object
           additionalProperties: {}
+        building_density_ge_properties:
+          type: object
+          additionalProperties: {}
+        building_footprint_ge_properties:
+          type: object
+          additionalProperties: {}
+        residential_typology_ge_properties:
+          type: object
+          additionalProperties: {}
+        urban_morphology_ge_properties:
+          type: object
+          additionalProperties: {}
     MessageResponse:
       type: object
       required:

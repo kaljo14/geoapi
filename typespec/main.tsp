@@ -115,6 +115,10 @@ model LocationContext {
   business_turnover_properties?: Record<unknown>;
   development_potential_properties?: Record<unknown>;
   neighborhood_properties?: Record<unknown>;
+  building_density_ge_properties?: Record<unknown>;
+  building_footprint_ge_properties?: Record<unknown>;
+  residential_typology_ge_properties?: Record<unknown>;
+  urban_morphology_ge_properties?: Record<unknown>;
 }
 
 // --- Routes ---

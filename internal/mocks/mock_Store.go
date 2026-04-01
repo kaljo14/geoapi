@@ -378,6 +378,126 @@ func (_c *MockStore_DeletePlace_Call) RunAndReturn(run func(context.Context, str
 	return _c
 }
 
+// GetBuildingDensityGeContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetBuildingDensityGeContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetBuildingDensityGeContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetBuildingDensityGeContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetBuildingDensityGeContext'
+type MockStore_GetBuildingDensityGeContext_Call struct {
+	*mock.Call
+}
+
+// GetBuildingDensityGeContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetBuildingDensityGeContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetBuildingDensityGeContext_Call {
+	return &MockStore_GetBuildingDensityGeContext_Call{Call: _e.mock.On("GetBuildingDensityGeContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetBuildingDensityGeContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetBuildingDensityGeContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetBuildingDensityGeContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetBuildingDensityGeContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetBuildingDensityGeContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetBuildingDensityGeContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetBuildingFootprintGeContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetBuildingFootprintGeContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetBuildingFootprintGeContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetBuildingFootprintGeContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetBuildingFootprintGeContext'
+type MockStore_GetBuildingFootprintGeContext_Call struct {
+	*mock.Call
+}
+
+// GetBuildingFootprintGeContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetBuildingFootprintGeContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetBuildingFootprintGeContext_Call {
+	return &MockStore_GetBuildingFootprintGeContext_Call{Call: _e.mock.On("GetBuildingFootprintGeContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetBuildingFootprintGeContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetBuildingFootprintGeContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetBuildingFootprintGeContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetBuildingFootprintGeContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetBuildingFootprintGeContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetBuildingFootprintGeContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetBusinessTurnoverContext provides a mock function with given fields: ctx, lng, lat
 func (_m *MockStore) GetBusinessTurnoverContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
 	ret := _m.Called(ctx, lng, lat)
@@ -494,66 +614,6 @@ func (_c *MockStore_GetDevelopmentPotentialContext_Call) Return(_a0 json.RawMess
 }
 
 func (_c *MockStore_GetDevelopmentPotentialContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetDevelopmentPotentialContext_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-/// GetNeighborhoodContext provides a mock function with given fields: ctx, lng, lat
-func (_m *MockStore) GetNeighborhoodContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
-	ret := _m.Called(ctx, lng, lat)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetNeighborhoodContext")
-	}
-
-	var r0 json.RawMessage
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
-		return rf(ctx, lng, lat)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
-		r0 = rf(ctx, lng, lat)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(json.RawMessage)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
-		r1 = rf(ctx, lng, lat)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockStore_GetNeighborhoodContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetNeighborhoodContext'
-type MockStore_GetNeighborhoodContext_Call struct {
-	*mock.Call
-}
-
-// GetNeighborhoodContext is a helper method to define mock.On call
-//   - ctx context.Context
-//   - lng float64
-//   - lat float64
-func (_e *MockStore_Expecter) GetNeighborhoodContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetNeighborhoodContext_Call {
-	return &MockStore_GetNeighborhoodContext_Call{Call: _e.mock.On("GetNeighborhoodContext", ctx, lng, lat)}
-}
-
-func (_c *MockStore_GetNeighborhoodContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetNeighborhoodContext_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
-	})
-	return _c
-}
-
-func (_c *MockStore_GetNeighborhoodContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetNeighborhoodContext_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockStore_GetNeighborhoodContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetNeighborhoodContext_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -802,6 +862,66 @@ func (_c *MockStore_GetMetroStops_Call) RunAndReturn(run func(context.Context) (
 	return _c
 }
 
+// GetNeighborhoodContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetNeighborhoodContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetNeighborhoodContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetNeighborhoodContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetNeighborhoodContext'
+type MockStore_GetNeighborhoodContext_Call struct {
+	*mock.Call
+}
+
+// GetNeighborhoodContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetNeighborhoodContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetNeighborhoodContext_Call {
+	return &MockStore_GetNeighborhoodContext_Call{Call: _e.mock.On("GetNeighborhoodContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetNeighborhoodContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetNeighborhoodContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetNeighborhoodContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetNeighborhoodContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetNeighborhoodContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetNeighborhoodContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetPedestrianContext provides a mock function with given fields: ctx, lng, lat
 func (_m *MockStore) GetPedestrianContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
 	ret := _m.Called(ctx, lng, lat)
@@ -1039,6 +1159,66 @@ func (_c *MockStore_GetPropertyPriceContext_Call) RunAndReturn(run func(context.
 	return _c
 }
 
+// GetResidentialTypologyGeContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetResidentialTypologyGeContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetResidentialTypologyGeContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetResidentialTypologyGeContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetResidentialTypologyGeContext'
+type MockStore_GetResidentialTypologyGeContext_Call struct {
+	*mock.Call
+}
+
+// GetResidentialTypologyGeContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetResidentialTypologyGeContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetResidentialTypologyGeContext_Call {
+	return &MockStore_GetResidentialTypologyGeContext_Call{Call: _e.mock.On("GetResidentialTypologyGeContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetResidentialTypologyGeContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetResidentialTypologyGeContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetResidentialTypologyGeContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetResidentialTypologyGeContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetResidentialTypologyGeContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetResidentialTypologyGeContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetSaturation provides a mock function with given fields: ctx, p
 func (_m *MockStore) GetSaturation(ctx context.Context, p store.SaturationParams) (store.SaturationRow, error) {
 	ret := _m.Called(ctx, p)
@@ -1092,6 +1272,66 @@ func (_c *MockStore_GetSaturation_Call) Return(_a0 store.SaturationRow, _a1 erro
 }
 
 func (_c *MockStore_GetSaturation_Call) RunAndReturn(run func(context.Context, store.SaturationParams) (store.SaturationRow, error)) *MockStore_GetSaturation_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetUrbanMorphologyGeContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetUrbanMorphologyGeContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUrbanMorphologyGeContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetUrbanMorphologyGeContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUrbanMorphologyGeContext'
+type MockStore_GetUrbanMorphologyGeContext_Call struct {
+	*mock.Call
+}
+
+// GetUrbanMorphologyGeContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetUrbanMorphologyGeContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetUrbanMorphologyGeContext_Call {
+	return &MockStore_GetUrbanMorphologyGeContext_Call{Call: _e.mock.On("GetUrbanMorphologyGeContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetUrbanMorphologyGeContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetUrbanMorphologyGeContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetUrbanMorphologyGeContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetUrbanMorphologyGeContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetUrbanMorphologyGeContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetUrbanMorphologyGeContext_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1152,6 +1392,122 @@ func (_c *MockStore_GetZoningContext_Call) Return(_a0 json.RawMessage, _a1 error
 }
 
 func (_c *MockStore_GetZoningContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetZoningContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListNeighborhoodNames provides a mock function with given fields: ctx
+func (_m *MockStore) ListNeighborhoodNames(ctx context.Context) ([]string, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListNeighborhoodNames")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]string, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []string); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ListNeighborhoodNames_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListNeighborhoodNames'
+type MockStore_ListNeighborhoodNames_Call struct {
+	*mock.Call
+}
+
+// ListNeighborhoodNames is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ListNeighborhoodNames(ctx interface{}) *MockStore_ListNeighborhoodNames_Call {
+	return &MockStore_ListNeighborhoodNames_Call{Call: _e.mock.On("ListNeighborhoodNames", ctx)}
+}
+
+func (_c *MockStore_ListNeighborhoodNames_Call) Run(run func(ctx context.Context)) *MockStore_ListNeighborhoodNames_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ListNeighborhoodNames_Call) Return(_a0 []string, _a1 error) *MockStore_ListNeighborhoodNames_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ListNeighborhoodNames_Call) RunAndReturn(run func(context.Context) ([]string, error)) *MockStore_ListNeighborhoodNames_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListParkingZones provides a mock function with given fields: ctx
+func (_m *MockStore) ListParkingZones(ctx context.Context) ([]store.ParkingZone, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListParkingZones")
+	}
+
+	var r0 []store.ParkingZone
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.ParkingZone, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.ParkingZone); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.ParkingZone)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ListParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListParkingZones'
+type MockStore_ListParkingZones_Call struct {
+	*mock.Call
+}
+
+// ListParkingZones is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ListParkingZones(ctx interface{}) *MockStore_ListParkingZones_Call {
+	return &MockStore_ListParkingZones_Call{Call: _e.mock.On("ListParkingZones", ctx)}
+}
+
+func (_c *MockStore_ListParkingZones_Call) Run(run func(ctx context.Context)) *MockStore_ListParkingZones_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ListParkingZones_Call) Return(_a0 []store.ParkingZone, _a1 error) *MockStore_ListParkingZones_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ListParkingZones_Call) RunAndReturn(run func(context.Context) ([]store.ParkingZone, error)) *MockStore_ListParkingZones_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1445,6 +1801,64 @@ func (_c *MockStore_ListPlacesNeedingEnrichment_Call) Return(_a0 []store.ListPla
 }
 
 func (_c *MockStore_ListPlacesNeedingEnrichment_Call) RunAndReturn(run func(context.Context) ([]store.ListPlacesNeedingEnrichmentRow, error)) *MockStore_ListPlacesNeedingEnrichment_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ParkingZonesGeoJSON provides a mock function with given fields: ctx
+func (_m *MockStore) ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ParkingZonesGeoJSON")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (json.RawMessage, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) json.RawMessage); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ParkingZonesGeoJSON_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ParkingZonesGeoJSON'
+type MockStore_ParkingZonesGeoJSON_Call struct {
+	*mock.Call
+}
+
+// ParkingZonesGeoJSON is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ParkingZonesGeoJSON(ctx interface{}) *MockStore_ParkingZonesGeoJSON_Call {
+	return &MockStore_ParkingZonesGeoJSON_Call{Call: _e.mock.On("ParkingZonesGeoJSON", ctx)}
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) Run(run func(ctx context.Context)) *MockStore_ParkingZonesGeoJSON_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_ParkingZonesGeoJSON_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ParkingZonesGeoJSON_Call) RunAndReturn(run func(context.Context) (json.RawMessage, error)) *MockStore_ParkingZonesGeoJSON_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1746,122 +2160,6 @@ func (_c *MockStore_UpsertPlace_Call) Return(_a0 store.UpsertPlaceRow, _a1 error
 }
 
 func (_c *MockStore_UpsertPlace_Call) RunAndReturn(run func(context.Context, store.UpsertPlaceParams) (store.UpsertPlaceRow, error)) *MockStore_UpsertPlace_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// ListParkingZones provides a mock function with given fields: ctx
-func (_m *MockStore) ListParkingZones(ctx context.Context) ([]store.ParkingZone, error) {
-	ret := _m.Called(ctx)
-
-	if len(ret) == 0 {
-		panic("no return value specified for ListParkingZones")
-	}
-
-	var r0 []store.ParkingZone
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]store.ParkingZone, error)); ok {
-		return rf(ctx)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context) []store.ParkingZone); ok {
-		r0 = rf(ctx)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]store.ParkingZone)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockStore_ListParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListParkingZones'
-type MockStore_ListParkingZones_Call struct {
-	*mock.Call
-}
-
-// ListParkingZones is a helper method to define mock.On call
-//   - ctx context.Context
-func (_e *MockStore_Expecter) ListParkingZones(ctx interface{}) *MockStore_ListParkingZones_Call {
-	return &MockStore_ListParkingZones_Call{Call: _e.mock.On("ListParkingZones", ctx)}
-}
-
-func (_c *MockStore_ListParkingZones_Call) Run(run func(ctx context.Context)) *MockStore_ListParkingZones_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
-	})
-	return _c
-}
-
-func (_c *MockStore_ListParkingZones_Call) Return(_a0 []store.ParkingZone, _a1 error) *MockStore_ListParkingZones_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockStore_ListParkingZones_Call) RunAndReturn(run func(context.Context) ([]store.ParkingZone, error)) *MockStore_ListParkingZones_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// ParkingZonesGeoJSON provides a mock function with given fields: ctx
-func (_m *MockStore) ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error) {
-	ret := _m.Called(ctx)
-
-	if len(ret) == 0 {
-		panic("no return value specified for ParkingZonesGeoJSON")
-	}
-
-	var r0 json.RawMessage
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) (json.RawMessage, error)); ok {
-		return rf(ctx)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context) json.RawMessage); ok {
-		r0 = rf(ctx)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(json.RawMessage)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockStore_ParkingZonesGeoJSON_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ParkingZonesGeoJSON'
-type MockStore_ParkingZonesGeoJSON_Call struct {
-	*mock.Call
-}
-
-// ParkingZonesGeoJSON is a helper method to define mock.On call
-//   - ctx context.Context
-func (_e *MockStore_Expecter) ParkingZonesGeoJSON(ctx interface{}) *MockStore_ParkingZonesGeoJSON_Call {
-	return &MockStore_ParkingZonesGeoJSON_Call{Call: _e.mock.On("ParkingZonesGeoJSON", ctx)}
-}
-
-func (_c *MockStore_ParkingZonesGeoJSON_Call) Run(run func(ctx context.Context)) *MockStore_ParkingZonesGeoJSON_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
-	})
-	return _c
-}
-
-func (_c *MockStore_ParkingZonesGeoJSON_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_ParkingZonesGeoJSON_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockStore_ParkingZonesGeoJSON_Call) RunAndReturn(run func(context.Context) (json.RawMessage, error)) *MockStore_ParkingZonesGeoJSON_Call {
 	_c.Call.Return(run)
 	return _c
 }

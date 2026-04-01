@@ -65,6 +65,11 @@ var sofiaplanDatasets = []sofiaplanDataset{
 	// Health services
 	{597, "sofiaplan_health_service_concentration"},         // Health service concentration
 	{598, "sofiaplan_health_infrastructure_concentration"}, // Health infrastructure concentration by GE
+	// Building analysis by GE
+	{632, "sofiaplan_building_density_ge"},    // Building density, intensity, enclosure ratio, floor count by GE
+	{633, "sofiaplan_building_footprint_ge"},  // Building footprint (ЗП) and total floor area (РЗП) by GE
+	{626, "sofiaplan_residential_typology_ge"}, // Residential building typology (single/multi/panel) by GE
+	{455, "sofiaplan_urban_morphology_ge"},    // Urban morphology classification by GE
 }
 
 // batchSize controls how many features are inserted per SQL statement.
@@ -301,16 +306,20 @@ func isGeoJSONContentType(ct string) bool {
 // GetSofiaplanContext queries all datasets in parallel and returns the location context.
 func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*generated.LocationContext, error) {
 	type result struct {
-		zoning       json.RawMessage
-		income       json.RawMessage
-		catchment    json.RawMessage
-		inCatch      bool
-		pedest       json.RawMessage
-		bizTurnover  json.RawMessage
-		propPrice    json.RawMessage
-		population   json.RawMessage
-		devPotential json.RawMessage
-		neighborhood json.RawMessage
+		zoning              json.RawMessage
+		income              json.RawMessage
+		catchment           json.RawMessage
+		inCatch             bool
+		pedest              json.RawMessage
+		bizTurnover         json.RawMessage
+		propPrice           json.RawMessage
+		population          json.RawMessage
+		devPotential        json.RawMessage
+		neighborhood        json.RawMessage
+		buildingDensityGe   json.RawMessage
+		buildingFootprintGe json.RawMessage
+		residTypologyGe     json.RawMessage
+		urbanMorphologyGe   json.RawMessage
 	}
 
 	var (
@@ -396,6 +405,34 @@ func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*gener
 		mu.Unlock()
 		return err
 	})
+	collect(func() error {
+		r, err := a.store.GetBuildingDensityGeContext(ctx, lng, lat)
+		mu.Lock()
+		res.buildingDensityGe = r
+		mu.Unlock()
+		return err
+	})
+	collect(func() error {
+		r, err := a.store.GetBuildingFootprintGeContext(ctx, lng, lat)
+		mu.Lock()
+		res.buildingFootprintGe = r
+		mu.Unlock()
+		return err
+	})
+	collect(func() error {
+		r, err := a.store.GetResidentialTypologyGeContext(ctx, lng, lat)
+		mu.Lock()
+		res.residTypologyGe = r
+		mu.Unlock()
+		return err
+	})
+	collect(func() error {
+		r, err := a.store.GetUrbanMorphologyGeContext(ctx, lng, lat)
+		mu.Lock()
+		res.urbanMorphologyGe = r
+		mu.Unlock()
+		return err
+	})
 
 	wg.Wait()
 
@@ -434,6 +471,18 @@ func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*gener
 	}
 	if res.neighborhood != nil {
 		lc.NeighborhoodProperties = rawToMap(res.neighborhood)
+	}
+	if res.buildingDensityGe != nil {
+		lc.BuildingDensityGeProperties = rawToMap(res.buildingDensityGe)
+	}
+	if res.buildingFootprintGe != nil {
+		lc.BuildingFootprintGeProperties = rawToMap(res.buildingFootprintGe)
+	}
+	if res.residTypologyGe != nil {
+		lc.ResidentialTypologyGeProperties = rawToMap(res.residTypologyGe)
+	}
+	if res.urbanMorphologyGe != nil {
+		lc.UrbanMorphologyGeProperties = rawToMap(res.urbanMorphologyGe)
 	}
 	return lc, nil
 }

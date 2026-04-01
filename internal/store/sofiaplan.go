@@ -188,3 +188,47 @@ func (q *Queries) GetDevelopmentPotentialContext(ctx context.Context, lng, lat f
 func (q *Queries) GetNeighborhoodContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
 	return q.scanProperties(ctx, neighborhoodContextSQL, lng, lat)
 }
+
+const buildingDensityGeContextSQL = `
+SELECT properties
+FROM sofiaplan_building_density_ge
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+const buildingFootprintGeContextSQL = `
+SELECT properties
+FROM sofiaplan_building_footprint_ge
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+const residentialTypologyGeContextSQL = `
+SELECT properties
+FROM sofiaplan_residential_typology_ge
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+const urbanMorphologyGeContextSQL = `
+SELECT properties
+FROM sofiaplan_urban_morphology_ge
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+func (q *Queries) GetBuildingDensityGeContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, buildingDensityGeContextSQL, lng, lat)
+}
+
+func (q *Queries) GetBuildingFootprintGeContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, buildingFootprintGeContextSQL, lng, lat)
+}
+
+func (q *Queries) GetResidentialTypologyGeContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, residentialTypologyGeContextSQL, lng, lat)
+}
+
+func (q *Queries) GetUrbanMorphologyGeContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, urbanMorphologyGeContextSQL, lng, lat)
+}

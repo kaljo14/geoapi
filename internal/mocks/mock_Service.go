@@ -242,64 +242,6 @@ func (_c *MockService_GetHeatmap_Call) RunAndReturn(run func(context.Context, fl
 	return _c
 }
 
-// GetParkingZones provides a mock function with given fields: ctx
-func (_m *MockService) GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
-	ret := _m.Called(ctx)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetParkingZones")
-	}
-
-	var r0 *generated.GeoJSONFeatureCollection
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) (*generated.GeoJSONFeatureCollection, error)); ok {
-		return rf(ctx)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context) *generated.GeoJSONFeatureCollection); ok {
-		r0 = rf(ctx)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*generated.GeoJSONFeatureCollection)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockService_GetParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetParkingZones'
-type MockService_GetParkingZones_Call struct {
-	*mock.Call
-}
-
-// GetParkingZones is a helper method to define mock.On call
-//   - ctx context.Context
-func (_e *MockService_Expecter) GetParkingZones(ctx interface{}) *MockService_GetParkingZones_Call {
-	return &MockService_GetParkingZones_Call{Call: _e.mock.On("GetParkingZones", ctx)}
-}
-
-func (_c *MockService_GetParkingZones_Call) Run(run func(ctx context.Context)) *MockService_GetParkingZones_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
-	})
-	return _c
-}
-
-func (_c *MockService_GetParkingZones_Call) Return(_a0 *generated.GeoJSONFeatureCollection, _a1 error) *MockService_GetParkingZones_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockService_GetParkingZones_Call) RunAndReturn(run func(context.Context) (*generated.GeoJSONFeatureCollection, error)) *MockService_GetParkingZones_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // GetMetroShapes provides a mock function with given fields: ctx
 func (_m *MockService) GetMetroShapes(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
 	ret := _m.Called(ctx)
@@ -412,6 +354,64 @@ func (_c *MockService_GetMetroStops_Call) Return(_a0 *generated.GeoJSONFeatureCo
 }
 
 func (_c *MockService_GetMetroStops_Call) RunAndReturn(run func(context.Context) (*generated.GeoJSONFeatureCollection, error)) *MockService_GetMetroStops_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetParkingZones provides a mock function with given fields: ctx
+func (_m *MockService) GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetParkingZones")
+	}
+
+	var r0 *generated.GeoJSONFeatureCollection
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (*generated.GeoJSONFeatureCollection, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) *generated.GeoJSONFeatureCollection); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.GeoJSONFeatureCollection)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_GetParkingZones_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetParkingZones'
+type MockService_GetParkingZones_Call struct {
+	*mock.Call
+}
+
+// GetParkingZones is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) GetParkingZones(ctx interface{}) *MockService_GetParkingZones_Call {
+	return &MockService_GetParkingZones_Call{Call: _e.mock.On("GetParkingZones", ctx)}
+}
+
+func (_c *MockService_GetParkingZones_Call) Run(run func(ctx context.Context)) *MockService_GetParkingZones_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_GetParkingZones_Call) Return(_a0 *generated.GeoJSONFeatureCollection, _a1 error) *MockService_GetParkingZones_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_GetParkingZones_Call) RunAndReturn(run func(context.Context) (*generated.GeoJSONFeatureCollection, error)) *MockService_GetParkingZones_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -789,6 +789,64 @@ func (_c *MockService_ImportSofiaplan_Call) Return(_a0 error) *MockService_Impor
 }
 
 func (_c *MockService_ImportSofiaplan_Call) RunAndReturn(run func(context.Context, string) error) *MockService_ImportSofiaplan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListNeighborhoods provides a mock function with given fields: ctx
+func (_m *MockService) ListNeighborhoods(ctx context.Context) ([]string, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListNeighborhoods")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]string, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []string); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_ListNeighborhoods_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListNeighborhoods'
+type MockService_ListNeighborhoods_Call struct {
+	*mock.Call
+}
+
+// ListNeighborhoods is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ListNeighborhoods(ctx interface{}) *MockService_ListNeighborhoods_Call {
+	return &MockService_ListNeighborhoods_Call{Call: _e.mock.On("ListNeighborhoods", ctx)}
+}
+
+func (_c *MockService_ListNeighborhoods_Call) Run(run func(ctx context.Context)) *MockService_ListNeighborhoods_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ListNeighborhoods_Call) Return(_a0 []string, _a1 error) *MockService_ListNeighborhoods_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_ListNeighborhoods_Call) RunAndReturn(run func(context.Context) ([]string, error)) *MockService_ListNeighborhoods_Call {
 	_c.Call.Return(run)
 	return _c
 }

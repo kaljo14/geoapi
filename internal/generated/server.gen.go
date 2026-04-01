@@ -52,18 +52,22 @@ type LivezResponse struct {
 
 // LocationContext defines model for LocationContext.
 type LocationContext struct {
-	BusinessTurnoverProperties     *map[string]interface{} `json:"business_turnover_properties,omitempty"`
-	DevelopmentPotentialProperties *map[string]interface{} `json:"development_potential_properties,omitempty"`
-	InMetroCatchment               bool                    `json:"in_metro_catchment"`
-	IncomeProperties               *map[string]interface{} `json:"income_properties,omitempty"`
-	Lat                            float64                 `json:"lat"`
-	Lng                            float64                 `json:"lng"`
-	MetroCatchmentProperties       *map[string]interface{} `json:"metro_catchment_properties,omitempty"`
-	NeighborhoodProperties         *map[string]interface{} `json:"neighborhood_properties,omitempty"`
-	PedestrianProperties           *map[string]interface{} `json:"pedestrian_properties,omitempty"`
-	PopulationProperties           *map[string]interface{} `json:"population_properties,omitempty"`
-	PropertyPriceProperties        *map[string]interface{} `json:"property_price_properties,omitempty"`
-	ZoningProperties               *map[string]interface{} `json:"zoning_properties,omitempty"`
+	BuildingDensityGeProperties     *map[string]interface{} `json:"building_density_ge_properties,omitempty"`
+	BuildingFootprintGeProperties   *map[string]interface{} `json:"building_footprint_ge_properties,omitempty"`
+	BusinessTurnoverProperties      *map[string]interface{} `json:"business_turnover_properties,omitempty"`
+	DevelopmentPotentialProperties  *map[string]interface{} `json:"development_potential_properties,omitempty"`
+	InMetroCatchment                bool                    `json:"in_metro_catchment"`
+	IncomeProperties                *map[string]interface{} `json:"income_properties,omitempty"`
+	Lat                             float64                 `json:"lat"`
+	Lng                             float64                 `json:"lng"`
+	MetroCatchmentProperties        *map[string]interface{} `json:"metro_catchment_properties,omitempty"`
+	NeighborhoodProperties          *map[string]interface{} `json:"neighborhood_properties,omitempty"`
+	PedestrianProperties            *map[string]interface{} `json:"pedestrian_properties,omitempty"`
+	PopulationProperties            *map[string]interface{} `json:"population_properties,omitempty"`
+	PropertyPriceProperties         *map[string]interface{} `json:"property_price_properties,omitempty"`
+	ResidentialTypologyGeProperties *map[string]interface{} `json:"residential_typology_ge_properties,omitempty"`
+	UrbanMorphologyGeProperties     *map[string]interface{} `json:"urban_morphology_ge_properties,omitempty"`
+	ZoningProperties                *map[string]interface{} `json:"zoning_properties,omitempty"`
 }
 
 // MessageResponse defines model for MessageResponse.
