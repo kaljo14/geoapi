@@ -9,6 +9,12 @@ import (
 )
 
 func (a *App) GetSaturation(ctx context.Context, lat, lng, radius float64, category string) (*generated.SaturationResult, error) {
+	if err := ValidateCoordinates(lat, lng); err != nil {
+		return nil, err
+	}
+	if err := ValidateRadius(radius); err != nil {
+		return nil, err
+	}
 	row, err := a.store.GetSaturation(ctx, store.SaturationParams{
 		Lat:      lat,
 		Lng:      lng,
@@ -35,6 +41,9 @@ func (a *App) GetSaturation(ctx context.Context, lat, lng, radius float64, categ
 }
 
 func (a *App) GetHeatmap(ctx context.Context, minLat, minLng, maxLat, maxLng, cellSize float64, category string) ([]generated.HeatmapTile, error) {
+	if err := ValidateBBox(minLat, minLng, maxLat, maxLng); err != nil {
+		return nil, err
+	}
 	rows, err := a.store.GetHeatmap(ctx, store.HeatmapParams{
 		MinLat:   minLat,
 		MinLng:   minLng,

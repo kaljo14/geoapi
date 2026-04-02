@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
+	"sync"
 
 	"go.uber.org/zap"
 
+	"github.com/neofyis/geopulse/internal/config"
 	"github.com/neofyis/geopulse/internal/generated"
 	"github.com/neofyis/geopulse/internal/store"
 )
@@ -45,17 +46,30 @@ type Service interface {
 type App struct {
 	store  store.Store
 	pinger Pinger
-	apiKey string
+	cfg    *config.Config
 	logger *zap.Logger
+
+	ctx    context.Context
+	cancel context.CancelFunc
+	wg     sync.WaitGroup
 }
 
-func New(s store.Store, p Pinger, logger *zap.Logger) *App {
+func New(s store.Store, p Pinger, cfg *config.Config, logger *zap.Logger) *App {
+	ctx, cancel := context.WithCancel(context.Background())
 	return &App{
 		store:  s,
 		pinger: p,
-		apiKey: os.Getenv("GOOGLE_API_KEY"),
+		cfg:    cfg,
 		logger: logger,
+		ctx:    ctx,
+		cancel: cancel,
 	}
+}
+
+// Shutdown cancels all background goroutines and waits for them to finish.
+func (a *App) Shutdown() {
+	a.cancel()
+	a.wg.Wait()
 }
 
 func (a *App) Ready(ctx context.Context) error {

@@ -105,19 +105,28 @@ func (a *App) ImportCSV(ctx context.Context, r io.Reader) (int, error) {
 		}
 	case 8:
 		// basic: place_id, name, address, lat, lng, rating, business_status, category
-		for _, rec := range records {
+		for i, rec := range records {
 			if len(rec) < 8 {
 				continue
 			}
-			lat, _ := strconv.ParseFloat(rec[3], 64)
-			lng, _ := strconv.ParseFloat(rec[4], 64)
+			lat, errLat := strconv.ParseFloat(rec[3], 64)
+			lng, errLng := strconv.ParseFloat(rec[4], 64)
+			if errLat != nil || errLng != nil {
+				a.logger.Warn("import: invalid coordinates, skipping row",
+					zap.Int("row", i+2), zap.String("lat", rec[3]), zap.String("lng", rec[4]))
+				continue
+			}
+			if lat == 0 && lng == 0 {
+				a.logger.Warn("import: zero coordinates, skipping row", zap.Int("row", i+2))
+				continue
+			}
 			rating, _ := strconv.ParseFloat(rec[5], 64)
 			_, err := a.store.UpsertPlace(ctx, store.UpsertPlaceParams{
 				PlaceID:        rec[0],
 				Name:           rec[1],
 				Address:        pgtype.Text{String: rec[2], Valid: rec[2] != ""},
-				Lat:            pgtype.Float8{Float64: lat, Valid: lat != 0},
-				Lng:            pgtype.Float8{Float64: lng, Valid: lng != 0},
+				Lat:            pgtype.Float8{Float64: lat, Valid: true},
+				Lng:            pgtype.Float8{Float64: lng, Valid: true},
 				Rating:         pgtype.Float8{Float64: rating, Valid: rating != 0},
 				BusinessStatus: pgtype.Text{String: rec[6], Valid: rec[6] != ""},
 				Category:       pgtype.Text{String: rec[7], Valid: rec[7] != ""},
@@ -130,12 +139,21 @@ func (a *App) ImportCSV(ctx context.Context, r io.Reader) (int, error) {
 		}
 	default:
 		// full: all 29 cols matching fullExportHeaders order
-		for _, rec := range records {
+		for i, rec := range records {
 			if len(rec) < len(fullExportHeaders) {
 				continue
 			}
-			lat, _ := strconv.ParseFloat(rec[3], 64)
-			lng, _ := strconv.ParseFloat(rec[4], 64)
+			lat, errLat := strconv.ParseFloat(rec[3], 64)
+			lng, errLng := strconv.ParseFloat(rec[4], 64)
+			if errLat != nil || errLng != nil {
+				a.logger.Warn("import: invalid coordinates, skipping row",
+					zap.Int("row", i+2), zap.String("lat", rec[3]), zap.String("lng", rec[4]))
+				continue
+			}
+			if lat == 0 && lng == 0 {
+				a.logger.Warn("import: zero coordinates, skipping row", zap.Int("row", i+2))
+				continue
+			}
 			rating, _ := strconv.ParseFloat(rec[5], 64)
 			priceLevel, _ := strconv.ParseInt(rec[15], 10, 32)
 			userRatings, _ := strconv.ParseInt(rec[16], 10, 32)
@@ -144,8 +162,8 @@ func (a *App) ImportCSV(ctx context.Context, r io.Reader) (int, error) {
 				PlaceID:                  rec[0],
 				Name:                     rec[1],
 				Address:                  pgtype.Text{String: rec[2], Valid: rec[2] != ""},
-				Lat:                      pgtype.Float8{Float64: lat, Valid: lat != 0},
-				Lng:                      pgtype.Float8{Float64: lng, Valid: lng != 0},
+				Lat:                      pgtype.Float8{Float64: lat, Valid: true},
+				Lng:                      pgtype.Float8{Float64: lng, Valid: true},
 				Rating:                   pgtype.Float8{Float64: rating, Valid: rating != 0},
 				BusinessStatus:           pgtype.Text{String: rec[6], Valid: rec[6] != ""},
 				Website:                  pgtype.Text{String: rec[7], Valid: rec[7] != ""},

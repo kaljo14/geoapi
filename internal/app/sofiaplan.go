@@ -70,6 +70,13 @@ var sofiaplanDatasets = []sofiaplanDataset{
 	{633, "sofiaplan_building_footprint_ge"},  // Building footprint (ЗП) and total floor area (РЗП) by GE
 	{626, "sofiaplan_residential_typology_ge"}, // Residential building typology (single/multi/panel) by GE
 	{455, "sofiaplan_urban_morphology_ge"},    // Urban morphology classification by GE
+	// Pedestrian network layers
+	{318, "sofiaplan_pedestrian_city"},             // Pedestrian network — Sofia city
+	{309, "sofiaplan_pedestrian_city_alt"},         // Pedestrian network — Sofia city (alt)
+	{332, "sofiaplan_pedestrian_municipality"},     // Pedestrian network — Sofia municipality
+	{361, "sofiaplan_pedestrian_municipality_alt"}, // Pedestrian network — Sofia municipality (alt)
+	{284, "sofiaplan_pedestrian_segmented"},        // Pedestrian network segmented
+	{603, "sofiaplan_pedestrian_integration"},      // Pedestrian integration near infrastructure dividers
 }
 
 // batchSize controls how many features are inserted per SQL statement.
@@ -79,13 +86,15 @@ const batchSize = 500
 // ImportSofiaplan starts a background import. If layer is non-empty only that
 // table is imported; otherwise every dataset in sofiaplanDatasets is imported.
 func (a *App) ImportSofiaplan(_ context.Context, layer string) error {
+	a.wg.Add(1)
 	go func() {
+		defer a.wg.Done()
 		if layer != "" {
 			a.logger.Info("sofiaplan single-layer import started", zap.String("layer", layer))
 		} else {
 			a.logger.Info("sofiaplan full import started")
 		}
-		if err := a.runSofiaplanImport(context.Background(), layer); err != nil {
+		if err := a.runSofiaplanImport(a.ctx, layer); err != nil {
 			a.logger.Error("sofiaplan import failed", zap.Error(err))
 		}
 	}()
@@ -94,6 +103,12 @@ func (a *App) ImportSofiaplan(_ context.Context, layer string) error {
 
 func (a *App) runSofiaplanImport(ctx context.Context, layer string) error {
 	for _, ds := range sofiaplanDatasets {
+		select {
+		case <-ctx.Done():
+			a.logger.Info("sofiaplan import cancelled")
+			return ctx.Err()
+		default:
+		}
 		if layer != "" && ds.tableName != layer {
 			continue
 		}

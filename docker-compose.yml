@@ -21,9 +21,7 @@ services:
       - "3000:3000"
     environment:
       DATABASE_URL: postgres://geopulse:geopulse@postgres:5432/geopulse
-    volumes:
-      - ../map-infra/apps/martin/martin-config.yaml:/config/martin-config.yaml:ro
-    command: ["--config", "/config/martin-config.yaml"]
+    command: ["--auto-bounds=calc"]
     depends_on:
       postgres:
         condition: service_healthy

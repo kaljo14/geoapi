@@ -72,9 +72,11 @@ func derivePOICategory(amenity, shop, tourism, leisure string) string {
 }
 
 func (a *App) ImportOSMNetwork(_ context.Context) error {
+	a.wg.Add(1)
 	go func() {
+		defer a.wg.Done()
 		a.logger.Info("osm import started")
-		if err := a.runOSMImport(context.Background()); err != nil {
+		if err := a.runOSMImport(a.ctx); err != nil {
 			a.logger.Error("osm import failed", zap.Error(err))
 		}
 	}()
@@ -82,9 +84,11 @@ func (a *App) ImportOSMNetwork(_ context.Context) error {
 }
 
 func (a *App) ImportOSMPOIs(_ context.Context) error {
+	a.wg.Add(1)
 	go func() {
+		defer a.wg.Done()
 		a.logger.Info("osm poi import started")
-		if err := a.runOSMPOIImport(context.Background()); err != nil {
+		if err := a.runOSMPOIImport(a.ctx); err != nil {
 			a.logger.Error("osm poi import failed", zap.Error(err))
 		}
 	}()

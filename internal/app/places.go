@@ -69,6 +69,9 @@ func (a *App) GetPlace(ctx context.Context, placeID string) (*generated.Place, e
 }
 
 func (a *App) CreatePlace(ctx context.Context, req generated.CreatePlaceRequest) (*generated.Place, error) {
+	if err := ValidateCreatePlace(req.Name, req.Lat, req.Lng); err != nil {
+		return nil, fmt.Errorf("validate create place: %w", err)
+	}
 	placeID := fmt.Sprintf("manual_%d", time.Now().UnixNano())
 	row, err := a.store.CreatePlace(ctx, store.CreatePlaceParams{
 		PlaceID:        placeID,
@@ -88,6 +91,9 @@ func (a *App) CreatePlace(ctx context.Context, req generated.CreatePlaceRequest)
 }
 
 func (a *App) UpdatePlace(ctx context.Context, placeID string, req generated.UpdatePlaceRequest) (*generated.Place, error) {
+	if err := ValidateCreatePlace(req.Name, req.Lat, req.Lng); err != nil {
+		return nil, fmt.Errorf("validate update place: %w", err)
+	}
 	row, err := a.store.UpdatePlace(ctx, store.UpdatePlaceParams{
 		Name:           req.Name,
 		Address:        pgtype.Text{String: strVal(req.Address), Valid: req.Address != nil},

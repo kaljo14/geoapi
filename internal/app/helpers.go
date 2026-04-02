@@ -1,7 +1,6 @@
 package app
 
 import (
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -58,15 +57,6 @@ func f64Val(f *float64) float64 {
 		return 0
 	}
 	return *f
-}
-
-func envFloat(key string, defaultVal float64) float64 {
-	if v := os.Getenv(key); v != "" {
-		if f, err := strconv.ParseFloat(v, 64); err == nil {
-			return f
-		}
-	}
-	return defaultVal
 }
 
 func joinStrings(ss []string) string {

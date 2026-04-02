@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
@@ -37,31 +36,37 @@ type placeResult struct {
 }
 
 func (a *App) StartScraper(ctx context.Context) error {
-	if a.apiKey == "" {
+	if a.cfg.GoogleAPIKey == "" {
 		return fmt.Errorf("GOOGLE_API_KEY not set")
 	}
 
-	lat := envFloat("SCRAPE_LAT", 42.6977)
-	lng := envFloat("SCRAPE_LNG", 23.3219)
-	radius := envFloat("SCRAPE_RADIUS", 5000)
-	types := os.Getenv("SCRAPE_TYPES")
-	if types == "" {
-		types = "restaurant"
-	}
+	lat := a.cfg.ScrapeLat
+	lng := a.cfg.ScrapeLng
+	radius := a.cfg.ScrapeRadius
+	types := a.cfg.ScrapeTypes
 
+	a.wg.Add(1)
 	go func() {
+		defer a.wg.Done()
+		bgCtx := a.ctx
 		a.logger.Info("scraper started", zap.Float64("lat", lat), zap.Float64("lng", lng))
 		scraped := 0
 		pageToken := ""
 
 		for {
+			select {
+			case <-bgCtx.Done():
+				a.logger.Info("scraper cancelled", zap.Int("scraped", scraped))
+				return
+			default:
+			}
 			results, nextToken, err := a.fetchNearbyPlaces(lat, lng, radius, types, pageToken)
 			if err != nil {
 				a.logger.Error("scraper fetch failed", zap.Error(err))
 				return
 			}
 			for _, r := range results {
-				if err := a.upsertScrapedPlace(ctx, r, types); err != nil {
+				if err := a.upsertScrapedPlace(bgCtx, r, types); err != nil {
 					a.logger.Warn("upsert failed", zap.String("place_id", r.PlaceID), zap.Error(err))
 				} else {
 					scraped++
@@ -83,7 +88,7 @@ func (a *App) fetchNearbyPlaces(lat, lng, radius float64, placeType, pageToken s
 		"location": {fmt.Sprintf("%f,%f", lat, lng)},
 		"radius":   {fmt.Sprintf("%.0f", radius)},
 		"type":     {placeType},
-		"key":      {a.apiKey},
+		"key":      {a.cfg.GoogleAPIKey},
 	}
 	if pageToken != "" {
 		params.Set("pagetoken", pageToken)

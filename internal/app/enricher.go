@@ -38,25 +38,34 @@ type placeDetails struct {
 }
 
 func (a *App) StartEnricher(ctx context.Context) error {
-	if a.apiKey == "" {
+	if a.cfg.GoogleAPIKey == "" {
 		return fmt.Errorf("GOOGLE_API_KEY not set")
 	}
 
+	a.wg.Add(1)
 	go func() {
+		defer a.wg.Done()
+		bgCtx := a.ctx
 		a.logger.Info("enricher started")
-		places, err := a.store.ListPlacesNeedingEnrichment(ctx)
+		places, err := a.store.ListPlacesNeedingEnrichment(bgCtx)
 		if err != nil {
 			a.logger.Error("enricher: list places failed", zap.Error(err))
 			return
 		}
 		enriched := 0
 		for _, p := range places {
+			select {
+			case <-bgCtx.Done():
+				a.logger.Info("enricher cancelled", zap.Int("enriched", enriched))
+				return
+			default:
+			}
 			details, err := a.fetchPlaceDetails(p.PlaceID)
 			if err != nil {
 				a.logger.Warn("enricher: fetch details failed", zap.String("place_id", p.PlaceID), zap.Error(err))
 				continue
 			}
-			if err := a.updateEnrichment(ctx, p.PlaceID, details); err != nil {
+			if err := a.updateEnrichment(bgCtx, p.PlaceID, details); err != nil {
 				a.logger.Warn("enricher: update failed", zap.String("place_id", p.PlaceID), zap.Error(err))
 				continue
 			}
@@ -73,7 +82,7 @@ func (a *App) fetchPlaceDetails(placeID string) (placeDetails, error) {
 	params := url.Values{
 		"place_id": {placeID},
 		"fields":   {fields},
-		"key":      {a.apiKey},
+		"key":      {a.cfg.GoogleAPIKey},
 	}
 	resp, err := http.Get("https://maps.googleapis.com/maps/api/place/details/json?" + params.Encode())
 	if err != nil {

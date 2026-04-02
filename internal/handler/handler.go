@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -10,6 +11,9 @@ import (
 	"github.com/neofyis/geopulse/internal/app"
 	"github.com/neofyis/geopulse/internal/generated"
 )
+
+// errInternal is a generic error returned to clients to avoid leaking internal details.
+var errInternal = errors.New("internal server error")
 
 type Handler struct {
 	app    app.Service
@@ -34,7 +38,7 @@ func (h *Handler) PlacesList(ctx context.Context, req generated.PlacesListReques
 	places, err := h.app.ListPlaces(ctx, category, tag)
 	if err != nil {
 		h.logger.Error("list places failed", zap.Error(err))
-		return nil, err
+		return nil, errInternal
 	}
 	return generated.PlacesList200JSONResponse(places), nil
 }
@@ -80,7 +84,7 @@ func (h *Handler) GetNeighborhoods(w http.ResponseWriter, r *http.Request) {
 	names, err := h.app.ListNeighborhoods(r.Context())
 	if err != nil {
 		h.logger.Error("list neighborhoods failed", zap.Error(err))
-		http.Error(w, "internal error", http.StatusInternalServerError)
+		writeJSONError(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -94,7 +98,7 @@ func (h *Handler) MetroShapesGet(ctx context.Context, _ generated.MetroShapesGet
 	fc, err := h.app.GetMetroShapes(ctx)
 	if err != nil {
 		h.logger.Error("get metro shapes failed", zap.Error(err))
-		return nil, err
+		return nil, errInternal
 	}
 	return generated.MetroShapesGet200JSONResponse(*fc), nil
 }
@@ -103,7 +107,7 @@ func (h *Handler) MetroStopsGet(ctx context.Context, _ generated.MetroStopsGetRe
 	fc, err := h.app.GetMetroStops(ctx)
 	if err != nil {
 		h.logger.Error("get metro stops failed", zap.Error(err))
-		return nil, err
+		return nil, errInternal
 	}
 	return generated.MetroStopsGet200JSONResponse(*fc), nil
 }
@@ -114,7 +118,7 @@ func (h *Handler) ParkingZonesGet(ctx context.Context, _ generated.ParkingZonesG
 	fc, err := h.app.GetParkingZones(ctx)
 	if err != nil {
 		h.logger.Error("get parking zones failed", zap.Error(err))
-		return nil, err
+		return nil, errInternal
 	}
 	return generated.ParkingZonesGet200JSONResponse(*fc), nil
 }
@@ -249,13 +253,13 @@ func (h *Handler) ExportPlacesSimple(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseMultipartForm(10 << 20); err != nil {
-		http.Error(w, "failed to parse form", http.StatusBadRequest)
+	if err := r.ParseMultipartForm(maxMultipartSize); err != nil {
+		writeJSONError(w, "failed to parse form", http.StatusBadRequest)
 		return
 	}
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		http.Error(w, "file field required", http.StatusBadRequest)
+		writeJSONError(w, "file field required", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
@@ -263,10 +267,20 @@ func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
 	count, err := h.app.ImportCSV(r.Context(), file)
 	if err != nil {
 		h.logger.Error("import places failed", zap.Error(err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, "import failed", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]int{"imported": count})
+}
+
+// maxMultipartSize is the maximum size for multipart form uploads (10 MB).
+const maxMultipartSize = 10 << 20
+
+// writeJSONError writes a JSON error response matching the OpenAPI error format.
+func writeJSONError(w http.ResponseWriter, msg string, status int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(map[string]string{"error": msg})
 }

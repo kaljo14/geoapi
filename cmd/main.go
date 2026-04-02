@@ -3,26 +3,33 @@ package main
 import (
 	"context"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	chimw "github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 
 	geopulseapi "github.com/neofyis/geopulse/api"
 	"github.com/neofyis/geopulse/internal/app"
+	"github.com/neofyis/geopulse/internal/config"
 	"github.com/neofyis/geopulse/internal/generated"
 	"github.com/neofyis/geopulse/internal/handler"
+	mw "github.com/neofyis/geopulse/internal/middleware"
 	"github.com/neofyis/geopulse/internal/store"
 )
 
 func main() {
 	logger, _ := zap.NewProduction()
 	defer func() { _ = logger.Sync() }()
+
+	cfg, err := config.Load()
+	if err != nil {
+		logger.Fatal("failed to load config", zap.Error(err))
+	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
@@ -33,9 +40,9 @@ func main() {
 		pool    *pgxpool.Pool
 	)
 
-	if dbURL := os.Getenv("DATABASE_URL"); dbURL != "" {
+	if cfg.DatabaseURL != "" {
 		var err error
-		pool, err = pgxpool.New(ctx, dbURL)
+		pool, err = pgxpool.New(ctx, cfg.DatabaseURL)
 		if err != nil {
 			logger.Fatal("failed to create db pool", zap.Error(err))
 		}
@@ -47,10 +54,15 @@ func main() {
 		logger.Warn("DATABASE_URL not set, running without database")
 	}
 
-	a := app.New(querier, pinger, logger)
+	a := app.New(querier, pinger, cfg, logger)
 	h := handler.NewHandler(a, logger)
 
 	r := chi.NewRouter()
+	r.Use(chimw.RequestID)
+	r.Use(chimw.RealIP)
+	r.Use(chimw.Recoverer)
+	r.Use(mw.ZapLogger(logger))
+
 	generated.HandlerWithOptions(generated.NewStrictHandler(h, nil), generated.ChiServerOptions{
 		BaseRouter: r,
 	})
@@ -68,13 +80,8 @@ func main() {
 		httpSwagger.URL("/openapi.yaml"),
 	))
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
 	srv := &http.Server{
-		Addr:         ":" + port,
+		Addr:         ":" + cfg.Port,
 		Handler:      r,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
@@ -84,6 +91,7 @@ func main() {
 	go func() {
 		<-ctx.Done()
 		logger.Info("shutting down server")
+		a.Shutdown() // cancel and wait for background goroutines
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer shutdownCancel()
 		if err := srv.Shutdown(shutdownCtx); err != nil {
