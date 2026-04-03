@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW IF EXISTS grocery_desert_tiles;

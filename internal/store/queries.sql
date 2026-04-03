@@ -4,7 +4,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 ORDER BY name;
 
@@ -14,7 +15,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE category = $1
 ORDER BY name;
@@ -25,7 +27,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE category = $1
   AND (',' || tags || ',') LIKE ('%,' || $2::text || ',%')
@@ -37,7 +40,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE (',' || tags || ',') LIKE ('%,' || $1::text || ',%')
 ORDER BY name;
@@ -48,7 +52,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE place_id = $1;
 

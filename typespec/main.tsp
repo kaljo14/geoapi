@@ -40,6 +40,8 @@ model Place {
   category?: string;
   tags?: string;
   scraped_at?: string;
+  estimated_monthly_visitors?: int32;
+  visitor_location_score?: float64;
 }
 
 model CreatePlaceRequest {
@@ -119,6 +121,9 @@ model LocationContext {
   building_footprint_ge_properties?: Record<unknown>;
   residential_typology_ge_properties?: Record<unknown>;
   urban_morphology_ge_properties?: Record<unknown>;
+  flood_risk_low_properties?: Record<unknown>;
+  flood_risk_medium_properties?: Record<unknown>;
+  flood_risk_high_properties?: Record<unknown>;
 }
 
 // --- Routes ---

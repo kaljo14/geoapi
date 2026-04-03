@@ -17,6 +17,9 @@ type Config struct {
 	ScrapeLng    float64
 	ScrapeRadius float64
 	ScrapeTypes  string
+	ScrapeQuery  string // when set, use Text Search API instead of Nearby Search
+	ScrapeTags   string // comma-separated tags to apply to scraped places
+
 }
 
 // Load reads configuration from environment variables and validates required fields.
@@ -29,6 +32,8 @@ func Load() (*Config, error) {
 		ScrapeLng:    envFloat("SCRAPE_LNG", 23.3219),
 		ScrapeRadius: envFloat("SCRAPE_RADIUS", 5000),
 		ScrapeTypes:  envString("SCRAPE_TYPES", "restaurant"),
+		ScrapeQuery:  os.Getenv("SCRAPE_QUERY"),
+		ScrapeTags:   os.Getenv("SCRAPE_TAGS"),
 	}
 	if c.Port == "" {
 		return nil, fmt.Errorf("PORT must not be empty")

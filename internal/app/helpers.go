@@ -37,6 +37,18 @@ func pint32(v pgtype.Int4) *int32 {
 	return &i
 }
 
+func pnumeric(v pgtype.Numeric) *float64 {
+	if !v.Valid {
+		return nil
+	}
+	f, _ := v.Float64Value()
+	if !f.Valid {
+		return nil
+	}
+	val := f.Float64
+	return &val
+}
+
 func ptime(v pgtype.Timestamptz) *string {
 	if !v.Valid {
 		return nil

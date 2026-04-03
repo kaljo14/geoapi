@@ -18,6 +18,7 @@ func listPlacesRowToPlace(r store.ListPlacesRow) generated.Place {
 		CurbsidePickup: pbool(r.CurbsidePickup), Delivery: pbool(r.Delivery), DineIn: pbool(r.DineIn),
 		Reservable: pbool(r.Reservable), Takeout: pbool(r.Takeout), WheelchairAccessible: pbool(r.WheelchairAccessible),
 		Category: pstr(r.Category), Tags: pstr(r.Tags), ScrapedAt: ptime(r.ScrapedAt),
+		EstimatedMonthlyVisitors: pint32(r.EstimatedMonthlyVisitors), VisitorLocationScore: pnumeric(r.VisitorLocationScore),
 	}
 }
 
@@ -34,6 +35,7 @@ func listPlacesByCategoryRowToPlace(r store.ListPlacesByCategoryRow) generated.P
 		CurbsidePickup: pbool(r.CurbsidePickup), Delivery: pbool(r.Delivery), DineIn: pbool(r.DineIn),
 		Reservable: pbool(r.Reservable), Takeout: pbool(r.Takeout), WheelchairAccessible: pbool(r.WheelchairAccessible),
 		Category: pstr(r.Category), Tags: pstr(r.Tags), ScrapedAt: ptime(r.ScrapedAt),
+		EstimatedMonthlyVisitors: pint32(r.EstimatedMonthlyVisitors), VisitorLocationScore: pnumeric(r.VisitorLocationScore),
 	}
 }
 
@@ -50,6 +52,7 @@ func listPlacesByCategoryAndTagRowToPlace(r store.ListPlacesByCategoryAndTagRow)
 		CurbsidePickup: pbool(r.CurbsidePickup), Delivery: pbool(r.Delivery), DineIn: pbool(r.DineIn),
 		Reservable: pbool(r.Reservable), Takeout: pbool(r.Takeout), WheelchairAccessible: pbool(r.WheelchairAccessible),
 		Category: pstr(r.Category), Tags: pstr(r.Tags), ScrapedAt: ptime(r.ScrapedAt),
+		EstimatedMonthlyVisitors: pint32(r.EstimatedMonthlyVisitors), VisitorLocationScore: pnumeric(r.VisitorLocationScore),
 	}
 }
 
@@ -66,6 +69,7 @@ func listPlacesByTagRowToPlace(r store.ListPlacesByTagRow) generated.Place {
 		CurbsidePickup: pbool(r.CurbsidePickup), Delivery: pbool(r.Delivery), DineIn: pbool(r.DineIn),
 		Reservable: pbool(r.Reservable), Takeout: pbool(r.Takeout), WheelchairAccessible: pbool(r.WheelchairAccessible),
 		Category: pstr(r.Category), Tags: pstr(r.Tags), ScrapedAt: ptime(r.ScrapedAt),
+		EstimatedMonthlyVisitors: pint32(r.EstimatedMonthlyVisitors), VisitorLocationScore: pnumeric(r.VisitorLocationScore),
 	}
 }
 
@@ -82,6 +86,7 @@ func getPlaceRowToPlace(r store.GetPlaceRow) generated.Place {
 		CurbsidePickup: pbool(r.CurbsidePickup), Delivery: pbool(r.Delivery), DineIn: pbool(r.DineIn),
 		Reservable: pbool(r.Reservable), Takeout: pbool(r.Takeout), WheelchairAccessible: pbool(r.WheelchairAccessible),
 		Category: pstr(r.Category), Tags: pstr(r.Tags), ScrapedAt: ptime(r.ScrapedAt),
+		EstimatedMonthlyVisitors: pint32(r.EstimatedMonthlyVisitors), VisitorLocationScore: pnumeric(r.VisitorLocationScore),
 	}
 }
 

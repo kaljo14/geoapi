@@ -36,9 +36,9 @@ func (q *Queries) TruncateSofiaplanTable(ctx context.Context, tableName string) 
 // BuildSofiaplanInsertSQL constructs the INSERT SQL for a given table.
 // If bgs2005 is true, the geometry is reprojected from BGS2005 (EPSG:7801) to WGS84.
 func BuildSofiaplanInsertSQL(tableName string, bgs2005 bool) string {
-	geomExpr := `ST_SetSRID(ST_GeomFromGeoJSON(p.geom_json), 4326)`
+	geomExpr := `ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON(p.geom_json), 4326))`
 	if bgs2005 {
-		geomExpr = `ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(p.geom_json), 7801), 4326)`
+		geomExpr = `ST_MakeValid(ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(p.geom_json), 7801), 4326))`
 	}
 	return fmt.Sprintf(`
 INSERT INTO %s (properties, geom)
@@ -231,4 +231,37 @@ func (q *Queries) GetResidentialTypologyGeContext(ctx context.Context, lng, lat 
 
 func (q *Queries) GetUrbanMorphologyGeContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
 	return q.scanProperties(ctx, urbanMorphologyGeContextSQL, lng, lat)
+}
+
+const floodRiskLowContextSQL = `
+SELECT properties
+FROM sofiaplan_flood_risk_low
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+const floodRiskMediumContextSQL = `
+SELECT properties
+FROM sofiaplan_flood_risk_medium
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+const floodRiskHighContextSQL = `
+SELECT properties
+FROM sofiaplan_flood_risk_high
+WHERE ST_Contains(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326))
+LIMIT 1
+`
+
+func (q *Queries) GetFloodRiskLowContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, floodRiskLowContextSQL, lng, lat)
+}
+
+func (q *Queries) GetFloodRiskMediumContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, floodRiskMediumContextSQL, lng, lat)
+}
+
+func (q *Queries) GetFloodRiskHighContext(ctx context.Context, lng, lat float64) (json.RawMessage, error) {
+	return q.scanProperties(ctx, floodRiskHighContextSQL, lng, lat)
 }

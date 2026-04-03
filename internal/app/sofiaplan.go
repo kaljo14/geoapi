@@ -77,6 +77,10 @@ var sofiaplanDatasets = []sofiaplanDataset{
 	{361, "sofiaplan_pedestrian_municipality_alt"}, // Pedestrian network — Sofia municipality (alt)
 	{284, "sofiaplan_pedestrian_segmented"},        // Pedestrian network segmented
 	{603, "sofiaplan_pedestrian_integration"},      // Pedestrian integration near infrastructure dividers
+	// Flood risk layers
+	{465, "sofiaplan_flood_risk_low"},    // Flood risk — low probability
+	{412, "sofiaplan_flood_risk_medium"}, // Flood risk — medium probability
+	{446, "sofiaplan_flood_risk_high"},   // Flood risk — high probability
 }
 
 // batchSize controls how many features are inserted per SQL statement.
@@ -335,6 +339,9 @@ func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*gener
 		buildingFootprintGe json.RawMessage
 		residTypologyGe     json.RawMessage
 		urbanMorphologyGe   json.RawMessage
+		floodRiskLow        json.RawMessage
+		floodRiskMedium     json.RawMessage
+		floodRiskHigh       json.RawMessage
 	}
 
 	var (
@@ -448,6 +455,27 @@ func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*gener
 		mu.Unlock()
 		return err
 	})
+	collect(func() error {
+		r, err := a.store.GetFloodRiskLowContext(ctx, lng, lat)
+		mu.Lock()
+		res.floodRiskLow = r
+		mu.Unlock()
+		return err
+	})
+	collect(func() error {
+		r, err := a.store.GetFloodRiskMediumContext(ctx, lng, lat)
+		mu.Lock()
+		res.floodRiskMedium = r
+		mu.Unlock()
+		return err
+	})
+	collect(func() error {
+		r, err := a.store.GetFloodRiskHighContext(ctx, lng, lat)
+		mu.Lock()
+		res.floodRiskHigh = r
+		mu.Unlock()
+		return err
+	})
 
 	wg.Wait()
 
@@ -498,6 +526,15 @@ func (a *App) GetSofiaplanContext(ctx context.Context, lat, lng float64) (*gener
 	}
 	if res.urbanMorphologyGe != nil {
 		lc.UrbanMorphologyGeProperties = rawToMap(res.urbanMorphologyGe)
+	}
+	if res.floodRiskLow != nil {
+		lc.FloodRiskLowProperties = rawToMap(res.floodRiskLow)
+	}
+	if res.floodRiskMedium != nil {
+		lc.FloodRiskMediumProperties = rawToMap(res.floodRiskMedium)
+	}
+	if res.floodRiskHigh != nil {
+		lc.FloodRiskHighProperties = rawToMap(res.floodRiskHigh)
 	}
 	return lc, nil
 }

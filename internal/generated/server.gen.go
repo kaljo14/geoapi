@@ -56,6 +56,9 @@ type LocationContext struct {
 	BuildingFootprintGeProperties   *map[string]interface{} `json:"building_footprint_ge_properties,omitempty"`
 	BusinessTurnoverProperties      *map[string]interface{} `json:"business_turnover_properties,omitempty"`
 	DevelopmentPotentialProperties  *map[string]interface{} `json:"development_potential_properties,omitempty"`
+	FloodRiskHighProperties         *map[string]interface{} `json:"flood_risk_high_properties,omitempty"`
+	FloodRiskLowProperties          *map[string]interface{} `json:"flood_risk_low_properties,omitempty"`
+	FloodRiskMediumProperties       *map[string]interface{} `json:"flood_risk_medium_properties,omitempty"`
 	InMetroCatchment                bool                    `json:"in_metro_catchment"`
 	IncomeProperties                *map[string]interface{} `json:"income_properties,omitempty"`
 	Lat                             float64                 `json:"lat"`
@@ -84,6 +87,7 @@ type Place struct {
 	Delivery                 *bool    `json:"delivery,omitempty"`
 	DineIn                   *bool    `json:"dine_in,omitempty"`
 	EditorialSummary         *string  `json:"editorial_summary,omitempty"`
+	EstimatedMonthlyVisitors *int32   `json:"estimated_monthly_visitors,omitempty"`
 	FormattedPhoneNumber     *string  `json:"formatted_phone_number,omitempty"`
 	GoogleMapsUrl            *string  `json:"google_maps_url,omitempty"`
 	IconUrl                  *string  `json:"icon_url,omitempty"`
@@ -104,6 +108,7 @@ type Place struct {
 	Types                    *string  `json:"types,omitempty"`
 	UserRatingsTotal         *int32   `json:"user_ratings_total,omitempty"`
 	UtcOffsetMinutes         *int32   `json:"utc_offset_minutes,omitempty"`
+	VisitorLocationScore     *float64 `json:"visitor_location_score,omitempty"`
 	Website                  *string  `json:"website,omitempty"`
 	WheelchairAccessible     *bool    `json:"wheelchair_accessible,omitempty"`
 }

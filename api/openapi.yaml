@@ -545,6 +545,15 @@ components:
         urban_morphology_ge_properties:
           type: object
           additionalProperties: {}
+        flood_risk_low_properties:
+          type: object
+          additionalProperties: {}
+        flood_risk_medium_properties:
+          type: object
+          additionalProperties: {}
+        flood_risk_high_properties:
+          type: object
+          additionalProperties: {}
     MessageResponse:
       type: object
       required:
@@ -624,6 +633,12 @@ components:
           type: string
         scraped_at:
           type: string
+        estimated_monthly_visitors:
+          type: integer
+          format: int32
+        visitor_location_score:
+          type: number
+          format: double
     ReadyzResponse:
       type: object
       required:

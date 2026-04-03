@@ -165,7 +165,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE place_id = $1
 `
@@ -200,6 +201,8 @@ type GetPlaceRow struct {
 	Category                 pgtype.Text
 	Tags                     pgtype.Text
 	ScrapedAt                pgtype.Timestamptz
+	EstimatedMonthlyVisitors pgtype.Int4
+	VisitorLocationScore     pgtype.Numeric
 }
 
 func (q *Queries) GetPlace(ctx context.Context, placeID string) (GetPlaceRow, error) {
@@ -235,6 +238,8 @@ func (q *Queries) GetPlace(ctx context.Context, placeID string) (GetPlaceRow, er
 		&i.Category,
 		&i.Tags,
 		&i.ScrapedAt,
+		&i.EstimatedMonthlyVisitors,
+		&i.VisitorLocationScore,
 	)
 	return i, err
 }
@@ -245,7 +250,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 ORDER BY name
 `
@@ -280,6 +286,8 @@ type ListPlacesRow struct {
 	Category                 pgtype.Text
 	Tags                     pgtype.Text
 	ScrapedAt                pgtype.Timestamptz
+	EstimatedMonthlyVisitors pgtype.Int4
+	VisitorLocationScore     pgtype.Numeric
 }
 
 func (q *Queries) ListPlaces(ctx context.Context) ([]ListPlacesRow, error) {
@@ -321,6 +329,8 @@ func (q *Queries) ListPlaces(ctx context.Context) ([]ListPlacesRow, error) {
 			&i.Category,
 			&i.Tags,
 			&i.ScrapedAt,
+			&i.EstimatedMonthlyVisitors,
+			&i.VisitorLocationScore,
 		); err != nil {
 			return nil, err
 		}
@@ -338,7 +348,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE category = $1
 ORDER BY name
@@ -374,6 +385,8 @@ type ListPlacesByCategoryRow struct {
 	Category                 pgtype.Text
 	Tags                     pgtype.Text
 	ScrapedAt                pgtype.Timestamptz
+	EstimatedMonthlyVisitors pgtype.Int4
+	VisitorLocationScore     pgtype.Numeric
 }
 
 func (q *Queries) ListPlacesByCategory(ctx context.Context, category pgtype.Text) ([]ListPlacesByCategoryRow, error) {
@@ -415,6 +428,8 @@ func (q *Queries) ListPlacesByCategory(ctx context.Context, category pgtype.Text
 			&i.Category,
 			&i.Tags,
 			&i.ScrapedAt,
+			&i.EstimatedMonthlyVisitors,
+			&i.VisitorLocationScore,
 		); err != nil {
 			return nil, err
 		}
@@ -432,7 +447,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE category = $1
   AND (',' || tags || ',') LIKE ('%,' || $2::text || ',%')
@@ -474,6 +490,8 @@ type ListPlacesByCategoryAndTagRow struct {
 	Category                 pgtype.Text
 	Tags                     pgtype.Text
 	ScrapedAt                pgtype.Timestamptz
+	EstimatedMonthlyVisitors pgtype.Int4
+	VisitorLocationScore     pgtype.Numeric
 }
 
 func (q *Queries) ListPlacesByCategoryAndTag(ctx context.Context, arg ListPlacesByCategoryAndTagParams) ([]ListPlacesByCategoryAndTagRow, error) {
@@ -515,6 +533,8 @@ func (q *Queries) ListPlacesByCategoryAndTag(ctx context.Context, arg ListPlaces
 			&i.Category,
 			&i.Tags,
 			&i.ScrapedAt,
+			&i.EstimatedMonthlyVisitors,
+			&i.VisitorLocationScore,
 		); err != nil {
 			return nil, err
 		}
@@ -532,7 +552,8 @@ SELECT place_id, name, address, lat, lng, rating, business_status,
        opening_hours, reviews, editorial_summary, photos, types,
        price_level, user_ratings_total, utc_offset_minutes,
        google_maps_url, icon_url, curbside_pickup, delivery, dine_in,
-       reservable, takeout, wheelchair_accessible, category, tags, scraped_at
+       reservable, takeout, wheelchair_accessible, category, tags, scraped_at,
+       estimated_monthly_visitors, visitor_location_score
 FROM places
 WHERE (',' || tags || ',') LIKE ('%,' || $1::text || ',%')
 ORDER BY name
@@ -568,6 +589,8 @@ type ListPlacesByTagRow struct {
 	Category                 pgtype.Text
 	Tags                     pgtype.Text
 	ScrapedAt                pgtype.Timestamptz
+	EstimatedMonthlyVisitors pgtype.Int4
+	VisitorLocationScore     pgtype.Numeric
 }
 
 func (q *Queries) ListPlacesByTag(ctx context.Context, dollar_1 string) ([]ListPlacesByTagRow, error) {
@@ -609,6 +632,8 @@ func (q *Queries) ListPlacesByTag(ctx context.Context, dollar_1 string) ([]ListP
 			&i.Category,
 			&i.Tags,
 			&i.ScrapedAt,
+			&i.EstimatedMonthlyVisitors,
+			&i.VisitorLocationScore,
 		); err != nil {
 			return nil, err
 		}
