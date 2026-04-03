@@ -254,6 +254,117 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/retail-listings:
+    get:
+      operationId: RetailListings_list
+      summary: List retail listings
+      description: Returns all retail/commercial open location listings.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetailListing'
+    post:
+      operationId: RetailListings_create
+      summary: Create retail listing
+      description: Creates a new retail/commercial location listing.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetailListing'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRetailListingRequest'
+  /api/retail-listings/{id}:
+    get:
+      operationId: RetailListingByID_get
+      summary: Get retail listing
+      description: Returns a single retail listing by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetailListing'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      operationId: RetailListingByID_update
+      summary: Update retail listing
+      description: Updates a retail listing by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetailListing'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRetailListingRequest'
+    delete:
+      operationId: RetailListingByID_delete
+      summary: Delete retail listing
+      description: Deletes a retail listing by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/saturation:
     get:
       operationId: Saturation_get
@@ -442,6 +553,36 @@ components:
           type: string
         category:
           type: string
+    CreateRetailListingRequest:
+      type: object
+      required:
+        - title
+        - lat
+        - lng
+        - is_exact
+      properties:
+        title:
+          type: string
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        address:
+          type: string
+        size_sqm:
+          type: number
+          format: double
+        price_eur:
+          type: number
+          format: double
+        listing_url:
+          type: string
+        google_maps_url:
+          type: string
+        is_exact:
+          type: boolean
     ErrorResponse:
       type: object
       required:
@@ -649,6 +790,45 @@ components:
           type: string
         db:
           type: string
+    RetailListing:
+      type: object
+      required:
+        - id
+        - title
+        - lat
+        - lng
+        - is_exact
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        address:
+          type: string
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        size_sqm:
+          type: number
+          format: double
+        price_eur:
+          type: number
+          format: double
+        listing_url:
+          type: string
+        google_maps_url:
+          type: string
+        is_exact:
+          type: boolean
+        created_by:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
     SaturationResult:
       type: object
       required:
@@ -703,6 +883,31 @@ components:
           type: string
         category:
           type: string
+    UpdateRetailListingRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        address:
+          type: string
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        size_sqm:
+          type: number
+          format: double
+        price_eur:
+          type: number
+          format: double
+        listing_url:
+          type: string
+        google_maps_url:
+          type: string
+        is_exact:
+          type: boolean
 servers:
   - url: http://localhost:8080
     description: Local development server

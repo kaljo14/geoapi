@@ -331,6 +331,63 @@ func (_c *MockStore_CreatePlace_Call) RunAndReturn(run func(context.Context, sto
 	return _c
 }
 
+// CreateRetailListing provides a mock function with given fields: ctx, arg
+func (_m *MockStore) CreateRetailListing(ctx context.Context, arg store.CreateRetailListingParams) (store.CreateRetailListingRow, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateRetailListing")
+	}
+
+	var r0 store.CreateRetailListingRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, store.CreateRetailListingParams) (store.CreateRetailListingRow, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, store.CreateRetailListingParams) store.CreateRetailListingRow); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(store.CreateRetailListingRow)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, store.CreateRetailListingParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_CreateRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateRetailListing'
+type MockStore_CreateRetailListing_Call struct {
+	*mock.Call
+}
+
+// CreateRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg store.CreateRetailListingParams
+func (_e *MockStore_Expecter) CreateRetailListing(ctx interface{}, arg interface{}) *MockStore_CreateRetailListing_Call {
+	return &MockStore_CreateRetailListing_Call{Call: _e.mock.On("CreateRetailListing", ctx, arg)}
+}
+
+func (_c *MockStore_CreateRetailListing_Call) Run(run func(ctx context.Context, arg store.CreateRetailListingParams)) *MockStore_CreateRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(store.CreateRetailListingParams))
+	})
+	return _c
+}
+
+func (_c *MockStore_CreateRetailListing_Call) Return(_a0 store.CreateRetailListingRow, _a1 error) *MockStore_CreateRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_CreateRetailListing_Call) RunAndReturn(run func(context.Context, store.CreateRetailListingParams) (store.CreateRetailListingRow, error)) *MockStore_CreateRetailListing_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DeletePlace provides a mock function with given fields: ctx, placeID
 func (_m *MockStore) DeletePlace(ctx context.Context, placeID string) error {
 	ret := _m.Called(ctx, placeID)
@@ -374,6 +431,53 @@ func (_c *MockStore_DeletePlace_Call) Return(_a0 error) *MockStore_DeletePlace_C
 }
 
 func (_c *MockStore_DeletePlace_Call) RunAndReturn(run func(context.Context, string) error) *MockStore_DeletePlace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteRetailListing provides a mock function with given fields: ctx, id
+func (_m *MockStore) DeleteRetailListing(ctx context.Context, id pgtype.UUID) error {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteRetailListing")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, pgtype.UUID) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockStore_DeleteRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteRetailListing'
+type MockStore_DeleteRetailListing_Call struct {
+	*mock.Call
+}
+
+// DeleteRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id pgtype.UUID
+func (_e *MockStore_Expecter) DeleteRetailListing(ctx interface{}, id interface{}) *MockStore_DeleteRetailListing_Call {
+	return &MockStore_DeleteRetailListing_Call{Call: _e.mock.On("DeleteRetailListing", ctx, id)}
+}
+
+func (_c *MockStore_DeleteRetailListing_Call) Run(run func(ctx context.Context, id pgtype.UUID)) *MockStore_DeleteRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(pgtype.UUID))
+	})
+	return _c
+}
+
+func (_c *MockStore_DeleteRetailListing_Call) Return(_a0 error) *MockStore_DeleteRetailListing_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockStore_DeleteRetailListing_Call) RunAndReturn(run func(context.Context, pgtype.UUID) error) *MockStore_DeleteRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -618,6 +722,186 @@ func (_c *MockStore_GetDevelopmentPotentialContext_Call) RunAndReturn(run func(c
 	return _c
 }
 
+// GetFloodRiskHighContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetFloodRiskHighContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetFloodRiskHighContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetFloodRiskHighContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetFloodRiskHighContext'
+type MockStore_GetFloodRiskHighContext_Call struct {
+	*mock.Call
+}
+
+// GetFloodRiskHighContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetFloodRiskHighContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetFloodRiskHighContext_Call {
+	return &MockStore_GetFloodRiskHighContext_Call{Call: _e.mock.On("GetFloodRiskHighContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetFloodRiskHighContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetFloodRiskHighContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskHighContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetFloodRiskHighContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskHighContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetFloodRiskHighContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetFloodRiskLowContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetFloodRiskLowContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetFloodRiskLowContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetFloodRiskLowContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetFloodRiskLowContext'
+type MockStore_GetFloodRiskLowContext_Call struct {
+	*mock.Call
+}
+
+// GetFloodRiskLowContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetFloodRiskLowContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetFloodRiskLowContext_Call {
+	return &MockStore_GetFloodRiskLowContext_Call{Call: _e.mock.On("GetFloodRiskLowContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetFloodRiskLowContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetFloodRiskLowContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskLowContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetFloodRiskLowContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskLowContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetFloodRiskLowContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetFloodRiskMediumContext provides a mock function with given fields: ctx, lng, lat
+func (_m *MockStore) GetFloodRiskMediumContext(ctx context.Context, lng float64, lat float64) (json.RawMessage, error) {
+	ret := _m.Called(ctx, lng, lat)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetFloodRiskMediumContext")
+	}
+
+	var r0 json.RawMessage
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) (json.RawMessage, error)); ok {
+		return rf(ctx, lng, lat)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, float64, float64) json.RawMessage); ok {
+		r0 = rf(ctx, lng, lat)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(json.RawMessage)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, float64, float64) error); ok {
+		r1 = rf(ctx, lng, lat)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetFloodRiskMediumContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetFloodRiskMediumContext'
+type MockStore_GetFloodRiskMediumContext_Call struct {
+	*mock.Call
+}
+
+// GetFloodRiskMediumContext is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lng float64
+//   - lat float64
+func (_e *MockStore_Expecter) GetFloodRiskMediumContext(ctx interface{}, lng interface{}, lat interface{}) *MockStore_GetFloodRiskMediumContext_Call {
+	return &MockStore_GetFloodRiskMediumContext_Call{Call: _e.mock.On("GetFloodRiskMediumContext", ctx, lng, lat)}
+}
+
+func (_c *MockStore_GetFloodRiskMediumContext_Call) Run(run func(ctx context.Context, lng float64, lat float64)) *MockStore_GetFloodRiskMediumContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(float64), args[2].(float64))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskMediumContext_Call) Return(_a0 json.RawMessage, _a1 error) *MockStore_GetFloodRiskMediumContext_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetFloodRiskMediumContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetFloodRiskMediumContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetHeatmap provides a mock function with given fields: ctx, p
 func (_m *MockStore) GetHeatmap(ctx context.Context, p store.HeatmapParams) ([]store.HeatmapRow, error) {
 	ret := _m.Called(ctx, p)
@@ -858,6 +1142,122 @@ func (_c *MockStore_GetMetroStops_Call) Return(_a0 []store.GetMetroStopsRow, _a1
 }
 
 func (_c *MockStore_GetMetroStops_Call) RunAndReturn(run func(context.Context) ([]store.GetMetroStopsRow, error)) *MockStore_GetMetroStops_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMetroStations provides a mock function with given fields: ctx
+func (_m *MockStore) GetMetroStations(ctx context.Context) ([]store.MetroStationRow, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMetroStations")
+	}
+
+	var r0 []store.MetroStationRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.MetroStationRow, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.MetroStationRow); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.MetroStationRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetMetroStations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMetroStations'
+type MockStore_GetMetroStations_Call struct {
+	*mock.Call
+}
+
+// GetMetroStations is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) GetMetroStations(ctx interface{}) *MockStore_GetMetroStations_Call {
+	return &MockStore_GetMetroStations_Call{Call: _e.mock.On("GetMetroStations", ctx)}
+}
+
+func (_c *MockStore_GetMetroStations_Call) Run(run func(ctx context.Context)) *MockStore_GetMetroStations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetMetroStations_Call) Return(_a0 []store.MetroStationRow, _a1 error) *MockStore_GetMetroStations_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetMetroStations_Call) RunAndReturn(run func(context.Context) ([]store.MetroStationRow, error)) *MockStore_GetMetroStations_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetTransitStops provides a mock function with given fields: ctx
+func (_m *MockStore) GetTransitStops(ctx context.Context) ([]store.TransitStopRow, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTransitStops")
+	}
+
+	var r0 []store.TransitStopRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.TransitStopRow, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.TransitStopRow); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.TransitStopRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetTransitStops_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransitStops'
+type MockStore_GetTransitStops_Call struct {
+	*mock.Call
+}
+
+// GetTransitStops is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) GetTransitStops(ctx interface{}) *MockStore_GetTransitStops_Call {
+	return &MockStore_GetTransitStops_Call{Call: _e.mock.On("GetTransitStops", ctx)}
+}
+
+func (_c *MockStore_GetTransitStops_Call) Run(run func(ctx context.Context)) *MockStore_GetTransitStops_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetTransitStops_Call) Return(_a0 []store.TransitStopRow, _a1 error) *MockStore_GetTransitStops_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetTransitStops_Call) RunAndReturn(run func(context.Context) ([]store.TransitStopRow, error)) *MockStore_GetTransitStops_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1215,6 +1615,63 @@ func (_c *MockStore_GetResidentialTypologyGeContext_Call) Return(_a0 json.RawMes
 }
 
 func (_c *MockStore_GetResidentialTypologyGeContext_Call) RunAndReturn(run func(context.Context, float64, float64) (json.RawMessage, error)) *MockStore_GetResidentialTypologyGeContext_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetRetailListing provides a mock function with given fields: ctx, id
+func (_m *MockStore) GetRetailListing(ctx context.Context, id pgtype.UUID) (store.GetRetailListingRow, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRetailListing")
+	}
+
+	var r0 store.GetRetailListingRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, pgtype.UUID) (store.GetRetailListingRow, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, pgtype.UUID) store.GetRetailListingRow); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(store.GetRetailListingRow)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, pgtype.UUID) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_GetRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetRetailListing'
+type MockStore_GetRetailListing_Call struct {
+	*mock.Call
+}
+
+// GetRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id pgtype.UUID
+func (_e *MockStore_Expecter) GetRetailListing(ctx interface{}, id interface{}) *MockStore_GetRetailListing_Call {
+	return &MockStore_GetRetailListing_Call{Call: _e.mock.On("GetRetailListing", ctx, id)}
+}
+
+func (_c *MockStore_GetRetailListing_Call) Run(run func(ctx context.Context, id pgtype.UUID)) *MockStore_GetRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(pgtype.UUID))
+	})
+	return _c
+}
+
+func (_c *MockStore_GetRetailListing_Call) Return(_a0 store.GetRetailListingRow, _a1 error) *MockStore_GetRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_GetRetailListing_Call) RunAndReturn(run func(context.Context, pgtype.UUID) (store.GetRetailListingRow, error)) *MockStore_GetRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1805,6 +2262,64 @@ func (_c *MockStore_ListPlacesNeedingEnrichment_Call) RunAndReturn(run func(cont
 	return _c
 }
 
+// ListRetailListings provides a mock function with given fields: ctx
+func (_m *MockStore) ListRetailListings(ctx context.Context) ([]store.ListRetailListingsRow, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListRetailListings")
+	}
+
+	var r0 []store.ListRetailListingsRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.ListRetailListingsRow, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.ListRetailListingsRow); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.ListRetailListingsRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ListRetailListings_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListRetailListings'
+type MockStore_ListRetailListings_Call struct {
+	*mock.Call
+}
+
+// ListRetailListings is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ListRetailListings(ctx interface{}) *MockStore_ListRetailListings_Call {
+	return &MockStore_ListRetailListings_Call{Call: _e.mock.On("ListRetailListings", ctx)}
+}
+
+func (_c *MockStore_ListRetailListings_Call) Run(run func(ctx context.Context)) *MockStore_ListRetailListings_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ListRetailListings_Call) Return(_a0 []store.ListRetailListingsRow, _a1 error) *MockStore_ListRetailListings_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ListRetailListings_Call) RunAndReturn(run func(context.Context) ([]store.ListRetailListingsRow, error)) *MockStore_ListRetailListings_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ParkingZonesGeoJSON provides a mock function with given fields: ctx
 func (_m *MockStore) ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error) {
 	ret := _m.Called(ctx)
@@ -2103,6 +2618,63 @@ func (_c *MockStore_UpdatePlaceEnrichment_Call) Return(_a0 error) *MockStore_Upd
 }
 
 func (_c *MockStore_UpdatePlaceEnrichment_Call) RunAndReturn(run func(context.Context, store.UpdatePlaceEnrichmentParams) error) *MockStore_UpdatePlaceEnrichment_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateRetailListing provides a mock function with given fields: ctx, arg
+func (_m *MockStore) UpdateRetailListing(ctx context.Context, arg store.UpdateRetailListingParams) (store.UpdateRetailListingRow, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateRetailListing")
+	}
+
+	var r0 store.UpdateRetailListingRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, store.UpdateRetailListingParams) (store.UpdateRetailListingRow, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, store.UpdateRetailListingParams) store.UpdateRetailListingRow); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(store.UpdateRetailListingRow)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, store.UpdateRetailListingParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_UpdateRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateRetailListing'
+type MockStore_UpdateRetailListing_Call struct {
+	*mock.Call
+}
+
+// UpdateRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg store.UpdateRetailListingParams
+func (_e *MockStore_Expecter) UpdateRetailListing(ctx interface{}, arg interface{}) *MockStore_UpdateRetailListing_Call {
+	return &MockStore_UpdateRetailListing_Call{Call: _e.mock.On("UpdateRetailListing", ctx, arg)}
+}
+
+func (_c *MockStore_UpdateRetailListing_Call) Run(run func(ctx context.Context, arg store.UpdateRetailListingParams)) *MockStore_UpdateRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(store.UpdateRetailListingParams))
+	})
+	return _c
+}
+
+func (_c *MockStore_UpdateRetailListing_Call) Return(_a0 store.UpdateRetailListingRow, _a1 error) *MockStore_UpdateRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_UpdateRetailListing_Call) RunAndReturn(run func(context.Context, store.UpdateRetailListingParams) (store.UpdateRetailListingRow, error)) *MockStore_UpdateRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }

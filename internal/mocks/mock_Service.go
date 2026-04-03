@@ -83,6 +83,65 @@ func (_c *MockService_CreatePlace_Call) RunAndReturn(run func(context.Context, g
 	return _c
 }
 
+// CreateRetailListing provides a mock function with given fields: ctx, req
+func (_m *MockService) CreateRetailListing(ctx context.Context, req generated.CreateRetailListingRequest) (*generated.RetailListing, error) {
+	ret := _m.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateRetailListing")
+	}
+
+	var r0 *generated.RetailListing
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, generated.CreateRetailListingRequest) (*generated.RetailListing, error)); ok {
+		return rf(ctx, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, generated.CreateRetailListingRequest) *generated.RetailListing); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.RetailListing)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, generated.CreateRetailListingRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_CreateRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateRetailListing'
+type MockService_CreateRetailListing_Call struct {
+	*mock.Call
+}
+
+// CreateRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req generated.CreateRetailListingRequest
+func (_e *MockService_Expecter) CreateRetailListing(ctx interface{}, req interface{}) *MockService_CreateRetailListing_Call {
+	return &MockService_CreateRetailListing_Call{Call: _e.mock.On("CreateRetailListing", ctx, req)}
+}
+
+func (_c *MockService_CreateRetailListing_Call) Run(run func(ctx context.Context, req generated.CreateRetailListingRequest)) *MockService_CreateRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(generated.CreateRetailListingRequest))
+	})
+	return _c
+}
+
+func (_c *MockService_CreateRetailListing_Call) Return(_a0 *generated.RetailListing, _a1 error) *MockService_CreateRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_CreateRetailListing_Call) RunAndReturn(run func(context.Context, generated.CreateRetailListingRequest) (*generated.RetailListing, error)) *MockService_CreateRetailListing_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DeletePlace provides a mock function with given fields: ctx, placeID
 func (_m *MockService) DeletePlace(ctx context.Context, placeID string) error {
 	ret := _m.Called(ctx, placeID)
@@ -126,6 +185,53 @@ func (_c *MockService_DeletePlace_Call) Return(_a0 error) *MockService_DeletePla
 }
 
 func (_c *MockService_DeletePlace_Call) RunAndReturn(run func(context.Context, string) error) *MockService_DeletePlace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteRetailListing provides a mock function with given fields: ctx, id
+func (_m *MockService) DeleteRetailListing(ctx context.Context, id string) error {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteRetailListing")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockService_DeleteRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteRetailListing'
+type MockService_DeleteRetailListing_Call struct {
+	*mock.Call
+}
+
+// DeleteRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+func (_e *MockService_Expecter) DeleteRetailListing(ctx interface{}, id interface{}) *MockService_DeleteRetailListing_Call {
+	return &MockService_DeleteRetailListing_Call{Call: _e.mock.On("DeleteRetailListing", ctx, id)}
+}
+
+func (_c *MockService_DeleteRetailListing_Call) Run(run func(ctx context.Context, id string)) *MockService_DeleteRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *MockService_DeleteRetailListing_Call) Return(_a0 error) *MockService_DeleteRetailListing_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockService_DeleteRetailListing_Call) RunAndReturn(run func(context.Context, string) error) *MockService_DeleteRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -358,6 +464,64 @@ func (_c *MockService_GetMetroStops_Call) RunAndReturn(run func(context.Context)
 	return _c
 }
 
+// GetTransitStops provides a mock function with given fields: ctx
+func (_m *MockService) GetTransitStops(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTransitStops")
+	}
+
+	var r0 *generated.GeoJSONFeatureCollection
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (*generated.GeoJSONFeatureCollection, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) *generated.GeoJSONFeatureCollection); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.GeoJSONFeatureCollection)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_GetTransitStops_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransitStops'
+type MockService_GetTransitStops_Call struct {
+	*mock.Call
+}
+
+// GetTransitStops is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) GetTransitStops(ctx interface{}) *MockService_GetTransitStops_Call {
+	return &MockService_GetTransitStops_Call{Call: _e.mock.On("GetTransitStops", ctx)}
+}
+
+func (_c *MockService_GetTransitStops_Call) Run(run func(ctx context.Context)) *MockService_GetTransitStops_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_GetTransitStops_Call) Return(_a0 *generated.GeoJSONFeatureCollection, _a1 error) *MockService_GetTransitStops_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_GetTransitStops_Call) RunAndReturn(run func(context.Context) (*generated.GeoJSONFeatureCollection, error)) *MockService_GetTransitStops_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetParkingZones provides a mock function with given fields: ctx
 func (_m *MockService) GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
 	ret := _m.Called(ctx)
@@ -471,6 +635,65 @@ func (_c *MockService_GetPlace_Call) Return(_a0 *generated.Place, _a1 error) *Mo
 }
 
 func (_c *MockService_GetPlace_Call) RunAndReturn(run func(context.Context, string) (*generated.Place, error)) *MockService_GetPlace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetRetailListing provides a mock function with given fields: ctx, id
+func (_m *MockService) GetRetailListing(ctx context.Context, id string) (*generated.RetailListing, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRetailListing")
+	}
+
+	var r0 *generated.RetailListing
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*generated.RetailListing, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *generated.RetailListing); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.RetailListing)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_GetRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetRetailListing'
+type MockService_GetRetailListing_Call struct {
+	*mock.Call
+}
+
+// GetRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+func (_e *MockService_Expecter) GetRetailListing(ctx interface{}, id interface{}) *MockService_GetRetailListing_Call {
+	return &MockService_GetRetailListing_Call{Call: _e.mock.On("GetRetailListing", ctx, id)}
+}
+
+func (_c *MockService_GetRetailListing_Call) Run(run func(ctx context.Context, id string)) *MockService_GetRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *MockService_GetRetailListing_Call) Return(_a0 *generated.RetailListing, _a1 error) *MockService_GetRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_GetRetailListing_Call) RunAndReturn(run func(context.Context, string) (*generated.RetailListing, error)) *MockService_GetRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -911,6 +1134,64 @@ func (_c *MockService_ListPlaces_Call) RunAndReturn(run func(context.Context, st
 	return _c
 }
 
+// ListRetailListings provides a mock function with given fields: ctx
+func (_m *MockService) ListRetailListings(ctx context.Context) ([]generated.RetailListing, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListRetailListings")
+	}
+
+	var r0 []generated.RetailListing
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]generated.RetailListing, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []generated.RetailListing); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]generated.RetailListing)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_ListRetailListings_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListRetailListings'
+type MockService_ListRetailListings_Call struct {
+	*mock.Call
+}
+
+// ListRetailListings is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ListRetailListings(ctx interface{}) *MockService_ListRetailListings_Call {
+	return &MockService_ListRetailListings_Call{Call: _e.mock.On("ListRetailListings", ctx)}
+}
+
+func (_c *MockService_ListRetailListings_Call) Run(run func(ctx context.Context)) *MockService_ListRetailListings_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ListRetailListings_Call) Return(_a0 []generated.RetailListing, _a1 error) *MockService_ListRetailListings_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_ListRetailListings_Call) RunAndReturn(run func(context.Context) ([]generated.RetailListing, error)) *MockService_ListRetailListings_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Ready provides a mock function with given fields: ctx
 func (_m *MockService) Ready(ctx context.Context) error {
 	ret := _m.Called(ctx)
@@ -1105,6 +1386,66 @@ func (_c *MockService_UpdatePlace_Call) Return(_a0 *generated.Place, _a1 error) 
 }
 
 func (_c *MockService_UpdatePlace_Call) RunAndReturn(run func(context.Context, string, generated.UpdatePlaceRequest) (*generated.Place, error)) *MockService_UpdatePlace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateRetailListing provides a mock function with given fields: ctx, id, req
+func (_m *MockService) UpdateRetailListing(ctx context.Context, id string, req generated.UpdateRetailListingRequest) (*generated.RetailListing, error) {
+	ret := _m.Called(ctx, id, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateRetailListing")
+	}
+
+	var r0 *generated.RetailListing
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, generated.UpdateRetailListingRequest) (*generated.RetailListing, error)); ok {
+		return rf(ctx, id, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string, generated.UpdateRetailListingRequest) *generated.RetailListing); ok {
+		r0 = rf(ctx, id, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*generated.RetailListing)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string, generated.UpdateRetailListingRequest) error); ok {
+		r1 = rf(ctx, id, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_UpdateRetailListing_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateRetailListing'
+type MockService_UpdateRetailListing_Call struct {
+	*mock.Call
+}
+
+// UpdateRetailListing is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+//   - req generated.UpdateRetailListingRequest
+func (_e *MockService_Expecter) UpdateRetailListing(ctx interface{}, id interface{}, req interface{}) *MockService_UpdateRetailListing_Call {
+	return &MockService_UpdateRetailListing_Call{Call: _e.mock.On("UpdateRetailListing", ctx, id, req)}
+}
+
+func (_c *MockService_UpdateRetailListing_Call) Run(run func(ctx context.Context, id string, req generated.UpdateRetailListingRequest)) *MockService_UpdateRetailListing_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(generated.UpdateRetailListingRequest))
+	})
+	return _c
+}
+
+func (_c *MockService_UpdateRetailListing_Call) Return(_a0 *generated.RetailListing, _a1 error) *MockService_UpdateRetailListing_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_UpdateRetailListing_Call) RunAndReturn(run func(context.Context, string, generated.UpdateRetailListingRequest) (*generated.RetailListing, error)) *MockService_UpdateRetailListing_Call {
 	_c.Call.Return(run)
 	return _c
 }

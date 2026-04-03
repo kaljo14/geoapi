@@ -27,6 +27,7 @@ type Service interface {
 	DeletePlace(ctx context.Context, placeID string) error
 	GetMetroShapes(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
 	GetMetroStops(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
+	GetTransitStops(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
 	GetSaturation(ctx context.Context, lat, lng, radius float64, category string) (*generated.SaturationResult, error)
 	GetHeatmap(ctx context.Context, minLat, minLng, maxLat, maxLng, cellSize float64, category string) ([]generated.HeatmapTile, error)
 	StartScraper(ctx context.Context) error
@@ -37,6 +38,11 @@ type Service interface {
 	GetSofiaplanContext(ctx context.Context, lat, lng float64) (*generated.LocationContext, error)
 	ListNeighborhoods(ctx context.Context) ([]string, error)
 	GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
+	ListRetailListings(ctx context.Context) ([]generated.RetailListing, error)
+	GetRetailListing(ctx context.Context, id string) (*generated.RetailListing, error)
+	CreateRetailListing(ctx context.Context, req generated.CreateRetailListingRequest) (*generated.RetailListing, error)
+	UpdateRetailListing(ctx context.Context, id string, req generated.UpdateRetailListingRequest) (*generated.RetailListing, error)
+	DeleteRetailListing(ctx context.Context, id string) error
 	ExportCSV(ctx context.Context, w io.Writer, simple bool) error
 	ImportCSV(ctx context.Context, r io.Reader) (int, error)
 	Ready(ctx context.Context) error

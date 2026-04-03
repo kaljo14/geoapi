@@ -70,6 +70,7 @@ func main() {
 	r.Get("/api/places/export", h.ExportPlaces)
 	r.Get("/api/places/export-simple", h.ExportPlacesSimple)
 	r.Post("/api/places/import", h.ImportPlaces)
+	r.Get("/api/metro/transit-stops", h.GetTransitStops)
 
 	// OpenAPI spec + Swagger UI
 	r.Get("/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {

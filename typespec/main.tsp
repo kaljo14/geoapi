@@ -104,6 +104,46 @@ model MessageResponse {
   message: string;
 }
 
+model RetailListing {
+  id: string;
+  title: string;
+  address?: string;
+  lat: float64;
+  lng: float64;
+  size_sqm?: float64;
+  price_eur?: float64;
+  listing_url?: string;
+  google_maps_url?: string;
+  is_exact: boolean;
+  created_by?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+model CreateRetailListingRequest {
+  title: string;
+  lat: float64;
+  lng: float64;
+  address?: string;
+  size_sqm?: float64;
+  price_eur?: float64;
+  listing_url?: string;
+  google_maps_url?: string;
+  is_exact: boolean;
+}
+
+model UpdateRetailListingRequest {
+  title?: string;
+  address?: string;
+  lat?: float64;
+  lng?: float64;
+  size_sqm?: float64;
+  price_eur?: float64;
+  listing_url?: string;
+  google_maps_url?: string;
+  is_exact?: boolean;
+}
+
 model LocationContext {
   lat: float64;
   lng: float64;
@@ -286,6 +326,51 @@ interface SofiaPlan {
     @query lng: float64,
   ): LocationContext | {
     @statusCode statusCode: 400;
+    @body body: ErrorResponse;
+  };
+}
+
+@route("/api/retail-listings")
+interface RetailListings {
+  @get
+  @summary("List retail listings")
+  @doc("Returns all retail/commercial open location listings.")
+  list(): RetailListing[];
+
+  @post
+  @summary("Create retail listing")
+  @doc("Creates a new retail/commercial location listing.")
+  create(@body body: CreateRetailListingRequest): RetailListing | {
+    @statusCode statusCode: 400;
+    @body body: ErrorResponse;
+  };
+}
+
+@route("/api/retail-listings/{id}")
+interface RetailListingByID {
+  @get
+  @summary("Get retail listing")
+  @doc("Returns a single retail listing by ID.")
+  get(@path id: string): RetailListing | {
+    @statusCode statusCode: 404;
+    @body body: ErrorResponse;
+  };
+
+  @put
+  @summary("Update retail listing")
+  @doc("Updates a retail listing by ID.")
+  update(@path id: string, @body body: UpdateRetailListingRequest): RetailListing | {
+    @statusCode statusCode: 404;
+    @body body: ErrorResponse;
+  };
+
+  @delete
+  @summary("Delete retail listing")
+  @doc("Deletes a retail listing by ID.")
+  delete(@path id: string): {
+    @statusCode statusCode: 204;
+  } | {
+    @statusCode statusCode: 404;
     @body body: ErrorResponse;
   };
 }

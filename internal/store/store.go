@@ -37,6 +37,8 @@ type Store interface {
 	ListNeighborhoodNames(ctx context.Context) ([]string, error)
 	ListParkingZones(ctx context.Context) ([]ParkingZone, error)
 	ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error)
+	GetMetroStations(ctx context.Context) ([]MetroStationRow, error)
+	GetTransitStops(ctx context.Context) ([]TransitStopRow, error)
 }
 
 var _ Store = (*Queries)(nil)

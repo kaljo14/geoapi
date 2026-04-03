@@ -111,6 +111,261 @@ func (q *Queries) CreatePlace(ctx context.Context, arg CreatePlaceParams) (Creat
 	return i, err
 }
 
+const createRetailListing = `-- name: CreateRetailListing :one
+INSERT INTO retail_listings (title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, location)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, ST_SetSRID(ST_MakePoint($4, $3), 4326))
+RETURNING id, title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+`
+
+type CreateRetailListingParams struct {
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	CreatedBy     pgtype.Text
+}
+
+type CreateRetailListingRow struct {
+	ID            pgtype.UUID
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	CreatedBy     pgtype.Text
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
+}
+
+func (q *Queries) CreateRetailListing(ctx context.Context, arg CreateRetailListingParams) (CreateRetailListingRow, error) {
+	row := q.db.QueryRow(ctx, createRetailListing,
+		arg.Title,
+		arg.Address,
+		arg.Lat,
+		arg.Lng,
+		arg.SizeSqm,
+		arg.PriceEur,
+		arg.ListingUrl,
+		arg.GoogleMapsUrl,
+		arg.IsExact,
+		arg.CreatedBy,
+	)
+	var i CreateRetailListingRow
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Address,
+		&i.Lat,
+		&i.Lng,
+		&i.SizeSqm,
+		&i.PriceEur,
+		&i.ListingUrl,
+		&i.GoogleMapsUrl,
+		&i.IsExact,
+		&i.CreatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const deleteRetailListing = `-- name: DeleteRetailListing :exec
+DELETE FROM retail_listings WHERE id = $1
+`
+
+func (q *Queries) DeleteRetailListing(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, deleteRetailListing, id)
+	return err
+}
+
+const getRetailListing = `-- name: GetRetailListing :one
+SELECT id, title, address, lat, lng, size_sqm, price_eur,
+       listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+FROM retail_listings
+WHERE id = $1
+`
+
+type GetRetailListingRow struct {
+	ID            pgtype.UUID
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	CreatedBy     pgtype.Text
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
+}
+
+func (q *Queries) GetRetailListing(ctx context.Context, id pgtype.UUID) (GetRetailListingRow, error) {
+	row := q.db.QueryRow(ctx, getRetailListing, id)
+	var i GetRetailListingRow
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Address,
+		&i.Lat,
+		&i.Lng,
+		&i.SizeSqm,
+		&i.PriceEur,
+		&i.ListingUrl,
+		&i.GoogleMapsUrl,
+		&i.IsExact,
+		&i.CreatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const listRetailListings = `-- name: ListRetailListings :many
+SELECT id, title, address, lat, lng, size_sqm, price_eur,
+       listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+FROM retail_listings
+ORDER BY created_at DESC
+`
+
+type ListRetailListingsRow struct {
+	ID            pgtype.UUID
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	CreatedBy     pgtype.Text
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
+}
+
+func (q *Queries) ListRetailListings(ctx context.Context) ([]ListRetailListingsRow, error) {
+	rows, err := q.db.Query(ctx, listRetailListings)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListRetailListingsRow
+	for rows.Next() {
+		var i ListRetailListingsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Address,
+			&i.Lat,
+			&i.Lng,
+			&i.SizeSqm,
+			&i.PriceEur,
+			&i.ListingUrl,
+			&i.GoogleMapsUrl,
+			&i.IsExact,
+			&i.CreatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateRetailListing = `-- name: UpdateRetailListing :one
+UPDATE retail_listings
+SET title           = $1,
+    address         = $2,
+    lat             = $3,
+    lng             = $4,
+    size_sqm        = $5,
+    price_eur       = $6,
+    listing_url     = $7,
+    google_maps_url = $8,
+    is_exact        = $9,
+    location        = ST_SetSRID(ST_MakePoint($4, $3), 4326),
+    updated_at      = NOW()
+WHERE id = $10
+RETURNING id, title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+`
+
+type UpdateRetailListingParams struct {
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	ID            pgtype.UUID
+}
+
+type UpdateRetailListingRow struct {
+	ID            pgtype.UUID
+	Title         string
+	Address       pgtype.Text
+	Lat           pgtype.Float8
+	Lng           pgtype.Float8
+	SizeSqm       pgtype.Float8
+	PriceEur      pgtype.Float8
+	ListingUrl    pgtype.Text
+	GoogleMapsUrl pgtype.Text
+	IsExact       bool
+	CreatedBy     pgtype.Text
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
+}
+
+func (q *Queries) UpdateRetailListing(ctx context.Context, arg UpdateRetailListingParams) (UpdateRetailListingRow, error) {
+	row := q.db.QueryRow(ctx, updateRetailListing,
+		arg.Title,
+		arg.Address,
+		arg.Lat,
+		arg.Lng,
+		arg.SizeSqm,
+		arg.PriceEur,
+		arg.ListingUrl,
+		arg.GoogleMapsUrl,
+		arg.IsExact,
+		arg.ID,
+	)
+	var i UpdateRetailListingRow
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Address,
+		&i.Lat,
+		&i.Lng,
+		&i.SizeSqm,
+		&i.PriceEur,
+		&i.ListingUrl,
+		&i.GoogleMapsUrl,
+		&i.IsExact,
+		&i.CreatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const deletePlace = `-- name: DeletePlace :exec
 DELETE FROM places WHERE place_id = $1
 `

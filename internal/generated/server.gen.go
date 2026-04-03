@@ -25,6 +25,19 @@ type CreatePlaceRequest struct {
 	Rating         *float64 `json:"rating,omitempty"`
 }
 
+// CreateRetailListingRequest defines model for CreateRetailListingRequest.
+type CreateRetailListingRequest struct {
+	Address       *string  `json:"address,omitempty"`
+	GoogleMapsUrl *string  `json:"google_maps_url,omitempty"`
+	IsExact       bool     `json:"is_exact"`
+	Lat           float64  `json:"lat"`
+	ListingUrl    *string  `json:"listing_url,omitempty"`
+	Lng           float64  `json:"lng"`
+	PriceEur      *float64 `json:"price_eur,omitempty"`
+	SizeSqm       *float64 `json:"size_sqm,omitempty"`
+	Title         string   `json:"title"`
+}
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	Error string `json:"error"`
@@ -119,6 +132,23 @@ type ReadyzResponse struct {
 	Status string `json:"status"`
 }
 
+// RetailListing defines model for RetailListing.
+type RetailListing struct {
+	Address       *string  `json:"address,omitempty"`
+	CreatedAt     *string  `json:"created_at,omitempty"`
+	CreatedBy     *string  `json:"created_by,omitempty"`
+	GoogleMapsUrl *string  `json:"google_maps_url,omitempty"`
+	Id            string   `json:"id"`
+	IsExact       bool     `json:"is_exact"`
+	Lat           float64  `json:"lat"`
+	ListingUrl    *string  `json:"listing_url,omitempty"`
+	Lng           float64  `json:"lng"`
+	PriceEur      *float64 `json:"price_eur,omitempty"`
+	SizeSqm       *float64 `json:"size_sqm,omitempty"`
+	Title         string   `json:"title"`
+	UpdatedAt     *string  `json:"updated_at,omitempty"`
+}
+
 // SaturationResult defines model for SaturationResult.
 type SaturationResult struct {
 	Category        *string `json:"category,omitempty"`
@@ -139,6 +169,19 @@ type UpdatePlaceRequest struct {
 	Lng            float64  `json:"lng"`
 	Name           string   `json:"name"`
 	Rating         *float64 `json:"rating,omitempty"`
+}
+
+// UpdateRetailListingRequest defines model for UpdateRetailListingRequest.
+type UpdateRetailListingRequest struct {
+	Address       *string  `json:"address,omitempty"`
+	GoogleMapsUrl *string  `json:"google_maps_url,omitempty"`
+	IsExact       *bool    `json:"is_exact,omitempty"`
+	Lat           *float64 `json:"lat,omitempty"`
+	ListingUrl    *string  `json:"listing_url,omitempty"`
+	Lng           *float64 `json:"lng,omitempty"`
+	PriceEur      *float64 `json:"price_eur,omitempty"`
+	SizeSqm       *float64 `json:"size_sqm,omitempty"`
+	Title         *string  `json:"title,omitempty"`
 }
 
 // HeatmapGetParams defines parameters for HeatmapGet.
@@ -183,6 +226,12 @@ type PlacesCreateJSONRequestBody = CreatePlaceRequest
 // PlaceByIDUpdateJSONRequestBody defines body for PlaceByIDUpdate for application/json ContentType.
 type PlaceByIDUpdateJSONRequestBody = UpdatePlaceRequest
 
+// RetailListingsCreateJSONRequestBody defines body for RetailListingsCreate for application/json ContentType.
+type RetailListingsCreateJSONRequestBody = CreateRetailListingRequest
+
+// RetailListingByIDUpdateJSONRequestBody defines body for RetailListingByIDUpdate for application/json ContentType.
+type RetailListingByIDUpdateJSONRequestBody = UpdateRetailListingRequest
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Opportunity heatmap
@@ -218,6 +267,21 @@ type ServerInterface interface {
 	// Update place
 	// (PUT /api/places/{place_id})
 	PlaceByIDUpdate(w http.ResponseWriter, r *http.Request, placeId string)
+	// List retail listings
+	// (GET /api/retail-listings)
+	RetailListingsList(w http.ResponseWriter, r *http.Request)
+	// Create retail listing
+	// (POST /api/retail-listings)
+	RetailListingsCreate(w http.ResponseWriter, r *http.Request)
+	// Delete retail listing
+	// (DELETE /api/retail-listings/{id})
+	RetailListingByIDDelete(w http.ResponseWriter, r *http.Request, id string)
+	// Get retail listing
+	// (GET /api/retail-listings/{id})
+	RetailListingByIDGet(w http.ResponseWriter, r *http.Request, id string)
+	// Update retail listing
+	// (PUT /api/retail-listings/{id})
+	RetailListingByIDUpdate(w http.ResponseWriter, r *http.Request, id string)
 	// Saturation score
 	// (GET /api/saturation)
 	SaturationGet(w http.ResponseWriter, r *http.Request, params SaturationGetParams)
@@ -308,6 +372,36 @@ func (_ Unimplemented) PlaceByIDGet(w http.ResponseWriter, r *http.Request, plac
 // Update place
 // (PUT /api/places/{place_id})
 func (_ Unimplemented) PlaceByIDUpdate(w http.ResponseWriter, r *http.Request, placeId string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// List retail listings
+// (GET /api/retail-listings)
+func (_ Unimplemented) RetailListingsList(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Create retail listing
+// (POST /api/retail-listings)
+func (_ Unimplemented) RetailListingsCreate(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Delete retail listing
+// (DELETE /api/retail-listings/{id})
+func (_ Unimplemented) RetailListingByIDDelete(w http.ResponseWriter, r *http.Request, id string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Get retail listing
+// (GET /api/retail-listings/{id})
+func (_ Unimplemented) RetailListingByIDGet(w http.ResponseWriter, r *http.Request, id string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Update retail listing
+// (PUT /api/retail-listings/{id})
+func (_ Unimplemented) RetailListingByIDUpdate(w http.ResponseWriter, r *http.Request, id string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -642,6 +736,109 @@ func (siw *ServerInterfaceWrapper) PlaceByIDUpdate(w http.ResponseWriter, r *htt
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PlaceByIDUpdate(w, r, placeId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetailListingsList operation middleware
+func (siw *ServerInterfaceWrapper) RetailListingsList(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetailListingsList(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetailListingsCreate operation middleware
+func (siw *ServerInterfaceWrapper) RetailListingsCreate(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetailListingsCreate(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetailListingByIDDelete operation middleware
+func (siw *ServerInterfaceWrapper) RetailListingByIDDelete(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetailListingByIDDelete(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetailListingByIDGet operation middleware
+func (siw *ServerInterfaceWrapper) RetailListingByIDGet(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetailListingByIDGet(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetailListingByIDUpdate operation middleware
+func (siw *ServerInterfaceWrapper) RetailListingByIDUpdate(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetailListingByIDUpdate(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1003,6 +1200,21 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Put(options.BaseURL+"/api/places/{place_id}", wrapper.PlaceByIDUpdate)
 	})
 	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/api/retail-listings", wrapper.RetailListingsList)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/api/retail-listings", wrapper.RetailListingsCreate)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/api/retail-listings/{id}", wrapper.RetailListingByIDDelete)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/api/retail-listings/{id}", wrapper.RetailListingByIDGet)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/api/retail-listings/{id}", wrapper.RetailListingByIDUpdate)
+	})
+	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/api/saturation", wrapper.SaturationGet)
 	})
 	r.Group(func(r chi.Router) {
@@ -1254,6 +1466,126 @@ func (response PlaceByIDUpdate404JSONResponse) VisitPlaceByIDUpdateResponse(w ht
 	return json.NewEncoder(w).Encode(response)
 }
 
+type RetailListingsListRequestObject struct {
+}
+
+type RetailListingsListResponseObject interface {
+	VisitRetailListingsListResponse(w http.ResponseWriter) error
+}
+
+type RetailListingsList200JSONResponse []RetailListing
+
+func (response RetailListingsList200JSONResponse) VisitRetailListingsListResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingsCreateRequestObject struct {
+	Body *RetailListingsCreateJSONRequestBody
+}
+
+type RetailListingsCreateResponseObject interface {
+	VisitRetailListingsCreateResponse(w http.ResponseWriter) error
+}
+
+type RetailListingsCreate200JSONResponse RetailListing
+
+func (response RetailListingsCreate200JSONResponse) VisitRetailListingsCreateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingsCreate400JSONResponse ErrorResponse
+
+func (response RetailListingsCreate400JSONResponse) VisitRetailListingsCreateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingByIDDeleteRequestObject struct {
+	Id string `json:"id"`
+}
+
+type RetailListingByIDDeleteResponseObject interface {
+	VisitRetailListingByIDDeleteResponse(w http.ResponseWriter) error
+}
+
+type RetailListingByIDDelete204Response struct {
+}
+
+func (response RetailListingByIDDelete204Response) VisitRetailListingByIDDeleteResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type RetailListingByIDDelete404JSONResponse ErrorResponse
+
+func (response RetailListingByIDDelete404JSONResponse) VisitRetailListingByIDDeleteResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingByIDGetRequestObject struct {
+	Id string `json:"id"`
+}
+
+type RetailListingByIDGetResponseObject interface {
+	VisitRetailListingByIDGetResponse(w http.ResponseWriter) error
+}
+
+type RetailListingByIDGet200JSONResponse RetailListing
+
+func (response RetailListingByIDGet200JSONResponse) VisitRetailListingByIDGetResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingByIDGet404JSONResponse ErrorResponse
+
+func (response RetailListingByIDGet404JSONResponse) VisitRetailListingByIDGetResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingByIDUpdateRequestObject struct {
+	Id   string `json:"id"`
+	Body *RetailListingByIDUpdateJSONRequestBody
+}
+
+type RetailListingByIDUpdateResponseObject interface {
+	VisitRetailListingByIDUpdateResponse(w http.ResponseWriter) error
+}
+
+type RetailListingByIDUpdate200JSONResponse RetailListing
+
+func (response RetailListingByIDUpdate200JSONResponse) VisitRetailListingByIDUpdateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type RetailListingByIDUpdate404JSONResponse ErrorResponse
+
+func (response RetailListingByIDUpdate404JSONResponse) VisitRetailListingByIDUpdateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type SaturationGetRequestObject struct {
 	Params SaturationGetParams
 }
@@ -1431,6 +1763,21 @@ type StrictServerInterface interface {
 	// Update place
 	// (PUT /api/places/{place_id})
 	PlaceByIDUpdate(ctx context.Context, request PlaceByIDUpdateRequestObject) (PlaceByIDUpdateResponseObject, error)
+	// List retail listings
+	// (GET /api/retail-listings)
+	RetailListingsList(ctx context.Context, request RetailListingsListRequestObject) (RetailListingsListResponseObject, error)
+	// Create retail listing
+	// (POST /api/retail-listings)
+	RetailListingsCreate(ctx context.Context, request RetailListingsCreateRequestObject) (RetailListingsCreateResponseObject, error)
+	// Delete retail listing
+	// (DELETE /api/retail-listings/{id})
+	RetailListingByIDDelete(ctx context.Context, request RetailListingByIDDeleteRequestObject) (RetailListingByIDDeleteResponseObject, error)
+	// Get retail listing
+	// (GET /api/retail-listings/{id})
+	RetailListingByIDGet(ctx context.Context, request RetailListingByIDGetRequestObject) (RetailListingByIDGetResponseObject, error)
+	// Update retail listing
+	// (PUT /api/retail-listings/{id})
+	RetailListingByIDUpdate(ctx context.Context, request RetailListingByIDUpdateRequestObject) (RetailListingByIDUpdateResponseObject, error)
 	// Saturation score
 	// (GET /api/saturation)
 	SaturationGet(ctx context.Context, request SaturationGetRequestObject) (SaturationGetResponseObject, error)
@@ -1764,6 +2111,146 @@ func (sh *strictHandler) PlaceByIDUpdate(w http.ResponseWriter, r *http.Request,
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(PlaceByIDUpdateResponseObject); ok {
 		if err := validResponse.VisitPlaceByIDUpdateResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RetailListingsList operation middleware
+func (sh *strictHandler) RetailListingsList(w http.ResponseWriter, r *http.Request) {
+	var request RetailListingsListRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RetailListingsList(ctx, request.(RetailListingsListRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RetailListingsList")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RetailListingsListResponseObject); ok {
+		if err := validResponse.VisitRetailListingsListResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RetailListingsCreate operation middleware
+func (sh *strictHandler) RetailListingsCreate(w http.ResponseWriter, r *http.Request) {
+	var request RetailListingsCreateRequestObject
+
+	var body RetailListingsCreateJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RetailListingsCreate(ctx, request.(RetailListingsCreateRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RetailListingsCreate")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RetailListingsCreateResponseObject); ok {
+		if err := validResponse.VisitRetailListingsCreateResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RetailListingByIDDelete operation middleware
+func (sh *strictHandler) RetailListingByIDDelete(w http.ResponseWriter, r *http.Request, id string) {
+	var request RetailListingByIDDeleteRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RetailListingByIDDelete(ctx, request.(RetailListingByIDDeleteRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RetailListingByIDDelete")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RetailListingByIDDeleteResponseObject); ok {
+		if err := validResponse.VisitRetailListingByIDDeleteResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RetailListingByIDGet operation middleware
+func (sh *strictHandler) RetailListingByIDGet(w http.ResponseWriter, r *http.Request, id string) {
+	var request RetailListingByIDGetRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RetailListingByIDGet(ctx, request.(RetailListingByIDGetRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RetailListingByIDGet")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RetailListingByIDGetResponseObject); ok {
+		if err := validResponse.VisitRetailListingByIDGetResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RetailListingByIDUpdate operation middleware
+func (sh *strictHandler) RetailListingByIDUpdate(w http.ResponseWriter, r *http.Request, id string) {
+	var request RetailListingByIDUpdateRequestObject
+
+	request.Id = id
+
+	var body RetailListingByIDUpdateJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RetailListingByIDUpdate(ctx, request.(RetailListingByIDUpdateRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RetailListingByIDUpdate")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RetailListingByIDUpdateResponseObject); ok {
+		if err := validResponse.VisitRetailListingByIDUpdateResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

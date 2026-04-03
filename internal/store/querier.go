@@ -12,7 +12,11 @@ import (
 
 type Querier interface {
 	CreatePlace(ctx context.Context, arg CreatePlaceParams) (CreatePlaceRow, error)
+	CreateRetailListing(ctx context.Context, arg CreateRetailListingParams) (CreateRetailListingRow, error)
 	DeletePlace(ctx context.Context, placeID string) error
+	DeleteRetailListing(ctx context.Context, id pgtype.UUID) error
+	GetRetailListing(ctx context.Context, id pgtype.UUID) (GetRetailListingRow, error)
+	ListRetailListings(ctx context.Context) ([]ListRetailListingsRow, error)
 	GetMetroStops(ctx context.Context) ([]GetMetroStopsRow, error)
 	GetPlace(ctx context.Context, placeID string) (GetPlaceRow, error)
 	ListPlaces(ctx context.Context) ([]ListPlacesRow, error)
@@ -22,6 +26,7 @@ type Querier interface {
 	ListPlacesNeedingEnrichment(ctx context.Context) ([]ListPlacesNeedingEnrichmentRow, error)
 	UpdatePlace(ctx context.Context, arg UpdatePlaceParams) (UpdatePlaceRow, error)
 	UpdatePlaceEnrichment(ctx context.Context, arg UpdatePlaceEnrichmentParams) error
+	UpdateRetailListing(ctx context.Context, arg UpdateRetailListingParams) (UpdateRetailListingRow, error)
 	// Saturation and heatmap queries are executed as raw pgx queries in analytics.go
 	// due to complex PostGIS CTE expressions that sqlc cannot type-check.
 	UpsertPlace(ctx context.Context, arg UpsertPlaceParams) (UpsertPlaceRow, error)

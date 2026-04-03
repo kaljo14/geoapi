@@ -29,6 +29,14 @@ func ValidateCreatePlace(name string, lat, lng float64) error {
 	return ValidateCoordinates(lat, lng)
 }
 
+// ValidateCreateRetailListing checks required fields for retail listing creation.
+func ValidateCreateRetailListing(title string, lat, lng float64) error {
+	if title == "" {
+		return errors.New("title is required")
+	}
+	return ValidateCoordinates(lat, lng)
+}
+
 // ValidateRadius checks that a radius value is positive and reasonable.
 func ValidateRadius(radius float64) error {
 	if radius <= 0 {

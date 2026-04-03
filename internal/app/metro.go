@@ -17,25 +17,53 @@ func (a *App) GetMetroShapes(_ context.Context) (*generated.GeoJSONFeatureCollec
 }
 
 func (a *App) GetMetroStops(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
-	stops, err := a.store.GetMetroStops(ctx)
+	stations, err := a.store.GetMetroStations(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("get metro stops: %w", err)
+		return nil, fmt.Errorf("get metro stations: %w", err)
 	}
 
-	features := make([]interface{}, 0, len(stops))
-	for _, s := range stops {
-		if !s.StopLat.Valid || !s.StopLon.Valid {
-			continue
-		}
+	features := make([]interface{}, 0, len(stations))
+	for _, s := range stations {
 		features = append(features, map[string]interface{}{
 			"type": "Feature",
 			"geometry": map[string]interface{}{
 				"type":        "Point",
-				"coordinates": []float64{s.StopLon.Float64, s.StopLat.Float64},
+				"coordinates": []float64{s.StopLon, s.StopLat},
+			},
+			"properties": map[string]interface{}{
+				"stop_id":          s.StopID,
+				"stop_name":        s.StopName,
+				"line":             s.Line,
+				"route_color":      s.RouteColor,
+				"route_text_color": s.RouteTextColor,
+			},
+		})
+	}
+
+	return &generated.GeoJSONFeatureCollection{
+		Type:     "FeatureCollection",
+		Features: features,
+	}, nil
+}
+
+func (a *App) GetTransitStops(ctx context.Context) (*generated.GeoJSONFeatureCollection, error) {
+	stops, err := a.store.GetTransitStops(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("get transit stops: %w", err)
+	}
+
+	features := make([]interface{}, 0, len(stops))
+	for _, s := range stops {
+		features = append(features, map[string]interface{}{
+			"type": "Feature",
+			"geometry": map[string]interface{}{
+				"type":        "Point",
+				"coordinates": []float64{s.StopLon, s.StopLat},
 			},
 			"properties": map[string]interface{}{
 				"stop_id":   s.StopID,
-				"stop_name": s.StopName.String,
+				"stop_name": s.StopName,
+				"stop_type": s.StopType,
 			},
 		})
 	}

@@ -1,6 +1,6 @@
 .PHONY: build run stop restart migrate-up migrate-down martin-restart \
         test lint clean tidy generate mock typespec sqlc \
-        docker-up docker-down seed venom
+        docker-up docker-down seed venom mcp-server
 
 SERVICE_NAME  := geopulse
 DATABASE_URL  ?= postgres://geopulse:geopulse@localhost:5432/geopulse?sslmode=disable
@@ -96,6 +96,13 @@ docker-down:
 
 # Full fresh start: bring up postgres+martin, apply all migrations.
 seed: docker-up migrate-up martin-restart
+
+# ---------------------------------------------------------------------------
+# MCP server
+# ---------------------------------------------------------------------------
+
+mcp-server:
+	go build -o bin/mcp-server ./cmd/mcp-server/
 
 # ---------------------------------------------------------------------------
 # E2E tests

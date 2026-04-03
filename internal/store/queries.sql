@@ -182,3 +182,41 @@ SET website                    = $2,
     takeout                    = $19,
     wheelchair_accessible      = $20
 WHERE place_id = $1;
+
+-- ── Retail Listings ──
+
+-- name: ListRetailListings :many
+SELECT id, title, address, lat, lng, size_sqm, price_eur,
+       listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+FROM retail_listings
+ORDER BY created_at DESC;
+
+-- name: GetRetailListing :one
+SELECT id, title, address, lat, lng, size_sqm, price_eur,
+       listing_url, google_maps_url, is_exact, created_by, created_at, updated_at
+FROM retail_listings
+WHERE id = $1;
+
+-- name: CreateRetailListing :one
+INSERT INTO retail_listings (title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, location)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, ST_SetSRID(ST_MakePoint($4, $3), 4326))
+RETURNING id, title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, created_at, updated_at;
+
+-- name: UpdateRetailListing :one
+UPDATE retail_listings
+SET title           = $1,
+    address         = $2,
+    lat             = $3,
+    lng             = $4,
+    size_sqm        = $5,
+    price_eur       = $6,
+    listing_url     = $7,
+    google_maps_url = $8,
+    is_exact        = $9,
+    location        = ST_SetSRID(ST_MakePoint($4, $3), 4326),
+    updated_at      = NOW()
+WHERE id = $10
+RETURNING id, title, address, lat, lng, size_sqm, price_eur, listing_url, google_maps_url, is_exact, created_by, created_at, updated_at;
+
+-- name: DeleteRetailListing :exec
+DELETE FROM retail_listings WHERE id = $1;

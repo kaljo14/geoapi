@@ -112,6 +112,18 @@ func (h *Handler) MetroStopsGet(ctx context.Context, _ generated.MetroStopsGetRe
 	return generated.MetroStopsGet200JSONResponse(*fc), nil
 }
 
+func (h *Handler) GetTransitStops(w http.ResponseWriter, r *http.Request) {
+	fc, err := h.app.GetTransitStops(r.Context())
+	if err != nil {
+		h.logger.Error("get transit stops failed", zap.Error(err))
+		writeJSONError(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	_ = json.NewEncoder(w).Encode(fc)
+}
+
 // --- Parking Zones ---
 
 func (h *Handler) ParkingZonesGet(ctx context.Context, _ generated.ParkingZonesGetRequestObject) (generated.ParkingZonesGetResponseObject, error) {
@@ -121,6 +133,52 @@ func (h *Handler) ParkingZonesGet(ctx context.Context, _ generated.ParkingZonesG
 		return nil, errInternal
 	}
 	return generated.ParkingZonesGet200JSONResponse(*fc), nil
+}
+
+// --- Retail Listings ---
+
+func (h *Handler) RetailListingsList(ctx context.Context, _ generated.RetailListingsListRequestObject) (generated.RetailListingsListResponseObject, error) {
+	listings, err := h.app.ListRetailListings(ctx)
+	if err != nil {
+		h.logger.Error("list retail listings failed", zap.Error(err))
+		return nil, errInternal
+	}
+	return generated.RetailListingsList200JSONResponse(listings), nil
+}
+
+func (h *Handler) RetailListingsCreate(ctx context.Context, req generated.RetailListingsCreateRequestObject) (generated.RetailListingsCreateResponseObject, error) {
+	listing, err := h.app.CreateRetailListing(ctx, *req.Body)
+	if err != nil {
+		h.logger.Error("create retail listing failed", zap.Error(err))
+		return generated.RetailListingsCreate400JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.RetailListingsCreate200JSONResponse(*listing), nil
+}
+
+func (h *Handler) RetailListingByIDGet(ctx context.Context, req generated.RetailListingByIDGetRequestObject) (generated.RetailListingByIDGetResponseObject, error) {
+	listing, err := h.app.GetRetailListing(ctx, req.Id)
+	if err != nil {
+		h.logger.Warn("get retail listing failed", zap.String("id", req.Id), zap.Error(err))
+		return generated.RetailListingByIDGet404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.RetailListingByIDGet200JSONResponse(*listing), nil
+}
+
+func (h *Handler) RetailListingByIDUpdate(ctx context.Context, req generated.RetailListingByIDUpdateRequestObject) (generated.RetailListingByIDUpdateResponseObject, error) {
+	listing, err := h.app.UpdateRetailListing(ctx, req.Id, *req.Body)
+	if err != nil {
+		h.logger.Warn("update retail listing failed", zap.String("id", req.Id), zap.Error(err))
+		return generated.RetailListingByIDUpdate404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.RetailListingByIDUpdate200JSONResponse(*listing), nil
+}
+
+func (h *Handler) RetailListingByIDDelete(ctx context.Context, req generated.RetailListingByIDDeleteRequestObject) (generated.RetailListingByIDDeleteResponseObject, error) {
+	if err := h.app.DeleteRetailListing(ctx, req.Id); err != nil {
+		h.logger.Warn("delete retail listing failed", zap.String("id", req.Id), zap.Error(err))
+		return generated.RetailListingByIDDelete404JSONResponse{Error: err.Error()}, nil
+	}
+	return generated.RetailListingByIDDelete204Response{}, nil
 }
 
 // --- Analytics ---
