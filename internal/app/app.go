@@ -38,6 +38,7 @@ type Service interface {
 	GetSofiaplanContext(ctx context.Context, lat, lng float64) (*generated.LocationContext, error)
 	ListNeighborhoods(ctx context.Context) ([]string, error)
 	GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
+	ListAdresLocations(ctx context.Context) ([]AdresLocation, error)
 	ListRetailListings(ctx context.Context) ([]generated.RetailListing, error)
 	GetRetailListing(ctx context.Context, id string) (*generated.RetailListing, error)
 	CreateRetailListing(ctx context.Context, req generated.CreateRetailListingRequest) (*generated.RetailListing, error)

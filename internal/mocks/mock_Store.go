@@ -2320,6 +2320,64 @@ func (_c *MockStore_ListRetailListings_Call) RunAndReturn(run func(context.Conte
 	return _c
 }
 
+// ListAdresLocations provides a mock function with given fields: ctx
+func (_m *MockStore) ListAdresLocations(ctx context.Context) ([]store.AdresLocationRow, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListAdresLocations")
+	}
+
+	var r0 []store.AdresLocationRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]store.AdresLocationRow, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []store.AdresLocationRow); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]store.AdresLocationRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockStore_ListAdresLocations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListAdresLocations'
+type MockStore_ListAdresLocations_Call struct {
+	*mock.Call
+}
+
+// ListAdresLocations is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockStore_Expecter) ListAdresLocations(ctx interface{}) *MockStore_ListAdresLocations_Call {
+	return &MockStore_ListAdresLocations_Call{Call: _e.mock.On("ListAdresLocations", ctx)}
+}
+
+func (_c *MockStore_ListAdresLocations_Call) Run(run func(ctx context.Context)) *MockStore_ListAdresLocations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockStore_ListAdresLocations_Call) Return(_a0 []store.AdresLocationRow, _a1 error) *MockStore_ListAdresLocations_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockStore_ListAdresLocations_Call) RunAndReturn(run func(context.Context) ([]store.AdresLocationRow, error)) *MockStore_ListAdresLocations_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ParkingZonesGeoJSON provides a mock function with given fields: ctx
 func (_m *MockStore) ParkingZonesGeoJSON(ctx context.Context) (json.RawMessage, error) {
 	ret := _m.Called(ctx)

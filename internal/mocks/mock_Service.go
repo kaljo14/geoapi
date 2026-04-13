@@ -6,6 +6,7 @@ import (
 	context "context"
 	io "io"
 
+	app "github.com/neofyis/geopulse/internal/app"
 	generated "github.com/neofyis/geopulse/internal/generated"
 
 	mock "github.com/stretchr/testify/mock"
@@ -1130,6 +1131,64 @@ func (_c *MockService_ListPlaces_Call) Return(_a0 []generated.Place, _a1 error) 
 }
 
 func (_c *MockService_ListPlaces_Call) RunAndReturn(run func(context.Context, string, string) ([]generated.Place, error)) *MockService_ListPlaces_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListAdresLocations provides a mock function with given fields: ctx
+func (_m *MockService) ListAdresLocations(ctx context.Context) ([]app.AdresLocation, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListAdresLocations")
+	}
+
+	var r0 []app.AdresLocation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]app.AdresLocation, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []app.AdresLocation); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]app.AdresLocation)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_ListAdresLocations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListAdresLocations'
+type MockService_ListAdresLocations_Call struct {
+	*mock.Call
+}
+
+// ListAdresLocations is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ListAdresLocations(ctx interface{}) *MockService_ListAdresLocations_Call {
+	return &MockService_ListAdresLocations_Call{Call: _e.mock.On("ListAdresLocations", ctx)}
+}
+
+func (_c *MockService_ListAdresLocations_Call) Run(run func(ctx context.Context)) *MockService_ListAdresLocations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ListAdresLocations_Call) Return(_a0 []app.AdresLocation, _a1 error) *MockService_ListAdresLocations_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_ListAdresLocations_Call) RunAndReturn(run func(context.Context) ([]app.AdresLocation, error)) *MockService_ListAdresLocations_Call {
 	_c.Call.Return(run)
 	return _c
 }

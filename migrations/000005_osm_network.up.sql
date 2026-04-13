@@ -21,3 +21,7 @@ CREATE TABLE IF NOT EXISTS osm_edges (
 CREATE INDEX IF NOT EXISTS idx_osm_edges_geom     ON osm_edges USING GIST(geom);
 CREATE INDEX IF NOT EXISTS idx_osm_edges_from_node ON osm_edges(from_node_id);
 CREATE INDEX IF NOT EXISTS idx_osm_edges_to_node   ON osm_edges(to_node_id);
+
+
+
+  docker exec -i neofyis-geopulse-postgres-1 psql -U geopulse -d geopulse </Users/kaloyanivanov/Personal-SRV/apis/barbershops_plain.sql

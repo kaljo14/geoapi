@@ -1,6 +1,7 @@
 .PHONY: build run stop restart migrate-up migrate-down martin-restart \
         test lint clean tidy generate mock typespec sqlc \
-        docker-up docker-down seed venom mcp-server
+        docker-up docker-down seed venom mcp-server \
+        db-dump db-restore
 
 SERVICE_NAME  := geopulse
 DATABASE_URL  ?= postgres://geopulse:geopulse@localhost:5432/geopulse?sslmode=disable
@@ -96,6 +97,34 @@ docker-down:
 
 # Full fresh start: bring up postgres+martin, apply all migrations.
 seed: docker-up migrate-up martin-restart
+
+# ---------------------------------------------------------------------------
+# Database dump & restore
+# ---------------------------------------------------------------------------
+
+BACKUP_DIR := backups
+TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
+
+# Dump local database to a compressed custom-format file.
+# Usage: make db-dump
+db-dump:
+	@mkdir -p $(BACKUP_DIR)
+	pg_dump --format=custom --clean --if-exists \
+		"$(DATABASE_URL)" \
+		-f $(BACKUP_DIR)/geopulse_$(TIMESTAMP).dump
+	@echo "Dumped to $(BACKUP_DIR)/geopulse_$(TIMESTAMP).dump"
+
+# Restore a dump to any database. Defaults to local; override for prod.
+# Usage:
+#   make db-restore DUMP=backups/geopulse_20260401.dump                     (local)
+#   make db-restore DUMP=backups/geopulse_20260401.dump RESTORE_URL=<prod>  (prod)
+RESTORE_URL ?= $(DATABASE_URL)
+db-restore:
+	@test -n "$(DUMP)" || { echo "Usage: make db-restore DUMP=path/to/file.dump [RESTORE_URL=...]"; exit 1; }
+	pg_restore --clean --if-exists --no-owner --no-acl \
+		-d "$(RESTORE_URL)" \
+		"$(DUMP)"
+	@echo "Restored $(DUMP) to database"
 
 # ---------------------------------------------------------------------------
 # MCP server

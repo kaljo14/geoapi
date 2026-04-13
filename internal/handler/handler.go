@@ -135,6 +135,20 @@ func (h *Handler) ParkingZonesGet(ctx context.Context, _ generated.ParkingZonesG
 	return generated.ParkingZonesGet200JSONResponse(*fc), nil
 }
 
+// --- Adres Locations (address.bg scraped listings) ---
+
+func (h *Handler) ListAdresLocations(w http.ResponseWriter, r *http.Request) {
+	listings, err := h.app.ListAdresLocations(r.Context())
+	if err != nil {
+		h.logger.Error("list adres locations failed", zap.Error(err))
+		writeJSONError(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=300")
+	_ = json.NewEncoder(w).Encode(listings)
+}
+
 // --- Retail Listings ---
 
 func (h *Handler) RetailListingsList(ctx context.Context, _ generated.RetailListingsListRequestObject) (generated.RetailListingsListResponseObject, error) {

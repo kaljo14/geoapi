@@ -220,3 +220,12 @@ RETURNING id, title, address, lat, lng, size_sqm, price_eur, listing_url, google
 
 -- name: DeleteRetailListing :exec
 DELETE FROM retail_listings WHERE id = $1;
+
+-- ── Adres Locations (address.bg scraped listings) ──
+
+-- name: ListAdresLocations :many
+SELECT offer_id, url, property_type, neighborhood, area_sqm, price_eur, price_per_sqm,
+       floor, address_text, lat, lng, geo_source, scraped_at
+FROM adres_locations
+WHERE lat IS NOT NULL AND lng IS NOT NULL
+ORDER BY scraped_at DESC;
