@@ -102,7 +102,7 @@ seed: docker-up migrate-up martin-restart
 # Database dump & restore
 # ---------------------------------------------------------------------------
 
-BACKUP_DIR := backups
+BACKUP_DIR := ../backups
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
 
 # Dump local database to a compressed custom-format file.
@@ -132,6 +132,15 @@ db-restore:
 
 mcp-server:
 	go build -o bin/mcp-server ./cmd/mcp-server/
+
+# ---------------------------------------------------------------------------
+# Deploy (multi-arch build + push to Docker Hub)
+# ---------------------------------------------------------------------------
+
+# Usage: make deploy            (auto-bumps patch version)
+#        make deploy TAG=v1.2.0 (explicit tag)
+deploy:
+	./deploy.sh $(TAG)
 
 # ---------------------------------------------------------------------------
 # E2E tests
