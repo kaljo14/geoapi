@@ -21,6 +21,9 @@ typespec/tsp-output/
 # macOS
 .DS_Store
 
+# Database backups
+backups/
+
 # JetBrains / VS Code
 .idea/
 *.iml
