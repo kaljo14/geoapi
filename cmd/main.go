@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os/signal"
 	"syscall"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/jackc/pgx/v5/pgxpool"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
@@ -20,6 +24,7 @@ import (
 	"github.com/neofyis/geopulse/internal/handler"
 	mw "github.com/neofyis/geopulse/internal/middleware"
 	"github.com/neofyis/geopulse/internal/store"
+	"github.com/neofyis/geopulse/migrations"
 )
 
 func main() {
@@ -41,6 +46,10 @@ func main() {
 	)
 
 	if cfg.DatabaseURL != "" {
+		if err := runMigrations(cfg.DatabaseURL, logger); err != nil {
+			logger.Fatal("failed to run migrations", zap.Error(err))
+		}
+
 		var err error
 		pool, err = pgxpool.New(ctx, cfg.DatabaseURL)
 		if err != nil {
@@ -106,4 +115,36 @@ func main() {
 		logger.Fatal("server failed", zap.Error(err))
 	}
 	logger.Info("server stopped")
+}
+
+// runMigrations applies all pending SQL migrations embedded in the binary.
+// It is a no-op when the database is already at the latest version.
+func runMigrations(databaseURL string, logger *zap.Logger) error {
+	source, err := iofs.New(migrations.FS, ".")
+	if err != nil {
+		return fmt.Errorf("open embedded migrations: %w", err)
+	}
+
+	// golang-migrate pgx5 driver expects "pgx5://" scheme.
+	pgxURL := "pgx5://" + stripScheme(databaseURL)
+	m, err := migrate.NewWithSourceInstance("iofs", source, pgxURL)
+	if err != nil {
+		return fmt.Errorf("create migrate instance: %w", err)
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return fmt.Errorf("apply migrations: %w", err)
+	}
+
+	logger.Info("migrations applied")
+	return nil
+}
+
+func stripScheme(url string) string {
+	for _, prefix := range []string{"postgresql://", "postgres://"} {
+		if len(url) > len(prefix) && url[:len(prefix)] == prefix {
+			return url[len(prefix):]
+		}
+	}
+	return url
 }

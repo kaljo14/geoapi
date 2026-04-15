@@ -27,10 +27,11 @@ type HeatmapParams struct {
 }
 
 type HeatmapRow struct {
-	Lat         float64
-	Lng         float64
-	AnchorScore float64
-	CompPenalty float64
+	Lat              float64
+	Lng              float64
+	AnchorScore      float64
+	CompPenalty      float64
+	FootTrafficBonus float64
 }
 
 const saturationSQL = `
@@ -64,7 +65,14 @@ SELECT
           AND p.business_status = 'OPERATIONAL'
           AND ($6::text = '' OR p.category = $6::text)
           AND ST_DWithin(p.location::geography, g.geom::geography, 800)
-    ), 0)::float8 AS comp_penalty
+    ), 0)::float8 AS comp_penalty,
+    COALESCE((
+        SELECT LEAST(30.0, ft.predicted_hourly::float8 / 10.0)
+        FROM calibrated_foot_traffic_tiles ft
+        WHERE ST_DWithin(ft.geom::geography, g.geom::geography, 150)
+        ORDER BY ft.geom <-> g.geom
+        LIMIT 1
+    ), 0)::float8 AS foot_traffic_bonus
 FROM (
     SELECT ST_SetSRID(ST_MakePoint(
         $2::float8 + j * $5::float8 + $5::float8 / 2.0,
@@ -95,7 +103,7 @@ func (q *Queries) GetHeatmap(ctx context.Context, p HeatmapParams) ([]HeatmapRow
 	var result []HeatmapRow
 	for rows.Next() {
 		var r HeatmapRow
-		if err := rows.Scan(&r.Lat, &r.Lng, &r.AnchorScore, &r.CompPenalty); err != nil {
+		if err := rows.Scan(&r.Lat, &r.Lng, &r.AnchorScore, &r.CompPenalty, &r.FootTrafficBonus); err != nil {
 			return nil, fmt.Errorf("scan heatmap row: %w", err)
 		}
 		result = append(result, r)

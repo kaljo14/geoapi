@@ -58,13 +58,14 @@ func (a *App) GetHeatmap(ctx context.Context, minLat, minLng, maxLat, maxLng, ce
 
 	tiles := make([]generated.HeatmapTile, 0, len(rows))
 	for _, r := range rows {
-		score := r.AnchorScore - r.CompPenalty
+		score := r.AnchorScore - r.CompPenalty + r.FootTrafficBonus
 		if score < 0 {
 			score = 0
 		}
 		if score > 100 {
 			score = 100
 		}
+		// TODO: expose FootTrafficBonus in API once TypeSpec is updated
 		tiles = append(tiles, generated.HeatmapTile{
 			Lat:         r.Lat,
 			Lng:         r.Lng,
