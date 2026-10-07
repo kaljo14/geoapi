@@ -229,3 +229,14 @@ SELECT offer_id, url, property_type, neighborhood, area_sqm, price_eur, price_pe
 FROM adres_locations
 WHERE lat IS NOT NULL AND lng IS NOT NULL
 ORDER BY scraped_at DESC;
+
+-- ── BG Properties Locations (bulgarianproperties.com scraped listings) ──
+
+-- name: ListBgPropertiesLocations :many
+SELECT url, property_id, title, status, property_type, neighborhood,
+       area_sqm, price_eur, price_per_sqm, floor, tags,
+       subtitle, description, image_url, agent_name, agent_role,
+       lat, lng, geo_source, scraped_at
+FROM bgproperties_locations
+WHERE lat IS NOT NULL AND lng IS NOT NULL
+ORDER BY scraped_at DESC;

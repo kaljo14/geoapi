@@ -14,6 +14,7 @@ type Querier interface {
 	CreatePlace(ctx context.Context, arg CreatePlaceParams) (CreatePlaceRow, error)
 	CreateRetailListing(ctx context.Context, arg CreateRetailListingParams) (CreateRetailListingRow, error)
 	ListAdresLocations(ctx context.Context) ([]AdresLocationRow, error)
+	ListBgPropertiesLocations(ctx context.Context) ([]BgPropertiesLocationRow, error)
 	DeletePlace(ctx context.Context, placeID string) error
 	DeleteRetailListing(ctx context.Context, id pgtype.UUID) error
 	GetRetailListing(ctx context.Context, id pgtype.UUID) (GetRetailListingRow, error)

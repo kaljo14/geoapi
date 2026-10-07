@@ -149,6 +149,20 @@ func (h *Handler) ListAdresLocations(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(listings)
 }
 
+// --- BG Properties Locations (bulgarianproperties.com scraped listings) ---
+
+func (h *Handler) ListBgPropertiesLocations(w http.ResponseWriter, r *http.Request) {
+	listings, err := h.app.ListBgPropertiesLocations(r.Context())
+	if err != nil {
+		h.logger.Error("list bgproperties locations failed", zap.Error(err))
+		writeJSONError(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=300")
+	_ = json.NewEncoder(w).Encode(listings)
+}
+
 // --- Retail Listings ---
 
 func (h *Handler) RetailListingsList(ctx context.Context, _ generated.RetailListingsListRequestObject) (generated.RetailListingsListResponseObject, error) {

@@ -39,6 +39,7 @@ type Service interface {
 	ListNeighborhoods(ctx context.Context) ([]string, error)
 	GetParkingZones(ctx context.Context) (*generated.GeoJSONFeatureCollection, error)
 	ListAdresLocations(ctx context.Context) ([]AdresLocation, error)
+	ListBgPropertiesLocations(ctx context.Context) ([]BgPropertiesLocation, error)
 	ListRetailListings(ctx context.Context) ([]generated.RetailListing, error)
 	GetRetailListing(ctx context.Context, id string) (*generated.RetailListing, error)
 	CreateRetailListing(ctx context.Context, req generated.CreateRetailListingRequest) (*generated.RetailListing, error)

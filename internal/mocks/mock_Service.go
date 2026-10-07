@@ -1193,6 +1193,64 @@ func (_c *MockService_ListAdresLocations_Call) RunAndReturn(run func(context.Con
 	return _c
 }
 
+// ListBgPropertiesLocations provides a mock function with given fields: ctx
+func (_m *MockService) ListBgPropertiesLocations(ctx context.Context) ([]app.BgPropertiesLocation, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListBgPropertiesLocations")
+	}
+
+	var r0 []app.BgPropertiesLocation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]app.BgPropertiesLocation, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []app.BgPropertiesLocation); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]app.BgPropertiesLocation)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockService_ListBgPropertiesLocations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListBgPropertiesLocations'
+type MockService_ListBgPropertiesLocations_Call struct {
+	*mock.Call
+}
+
+// ListBgPropertiesLocations is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockService_Expecter) ListBgPropertiesLocations(ctx interface{}) *MockService_ListBgPropertiesLocations_Call {
+	return &MockService_ListBgPropertiesLocations_Call{Call: _e.mock.On("ListBgPropertiesLocations", ctx)}
+}
+
+func (_c *MockService_ListBgPropertiesLocations_Call) Run(run func(ctx context.Context)) *MockService_ListBgPropertiesLocations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockService_ListBgPropertiesLocations_Call) Return(_a0 []app.BgPropertiesLocation, _a1 error) *MockService_ListBgPropertiesLocations_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockService_ListBgPropertiesLocations_Call) RunAndReturn(run func(context.Context) ([]app.BgPropertiesLocation, error)) *MockService_ListBgPropertiesLocations_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ListRetailListings provides a mock function with given fields: ctx
 func (_m *MockService) ListRetailListings(ctx context.Context) ([]generated.RetailListing, error) {
 	ret := _m.Called(ctx)

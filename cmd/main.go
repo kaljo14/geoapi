@@ -81,6 +81,7 @@ func main() {
 	r.Post("/api/places/import", h.ImportPlaces)
 	r.Get("/api/metro/transit-stops", h.GetTransitStops)
 	r.Get("/api/adres-locations", h.ListAdresLocations)
+	r.Get("/api/bgproperties-locations", h.ListBgPropertiesLocations)
 
 	// OpenAPI spec + Swagger UI
 	r.Get("/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
