@@ -6,22 +6,150 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  ci:
+  lint:
+    name: Lint (Go)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
           cache-dependency-path: go.sum
+      - uses: golangci/golangci-lint-action@v9
 
+  test:
+    name: Build and unit tests (Go)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
       - name: Build
         run: go build ./...
-
-      - name: Test
+      - name: Unit tests
         run: go test ./...
 
-      - name: Lint
-        uses: golangci/golangci-lint-action@v6
+  secrets:
+    name: Secret scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secret
+          format: table
+          exit-code: '1'
+
+  secrets-gitleaks:
+    name: Secret scan (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan new commits
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            range="$BASE_SHA..HEAD"
+          elif git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+            range="$BEFORE_SHA..HEAD"
+          else
+            range="--all"
+          fi
+          docker run --rm --network none \
+            --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/repo:ro" -w /repo \
+            ghcr.io/gitleaks/gitleaks:v8.30.0 \
+            git --redact --log-opts="$range" /repo
+
+  sast-go:
+    name: SAST (Go)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: securego/gosec@v2.29.0
+        with:
+          args: -exclude-generated -severity medium -confidence medium ./...
+
+  sast-python:
+    name: SAST (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install Bandit
+        run: python -m pip install bandit==1.9.4
+      - name: Scan scraper
+        run: bandit -r scraper -x scraper/__pycache__ -ll -ii
+
+  dependencies:
+    name: Dependency / SCA scan (Go and npm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          format: table
+          exit-code: '1'
+
+  dependencies-python:
+    name: Dependency / SCA scan (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install pip-audit
+        run: python -m pip install pip-audit==2.10.1
+      - name: Audit scraper requirements
+        run: pip-audit -r scraper/requirements.txt
+
+  iac:
+    name: IaC and Dockerfile scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          format: table
+          exit-code: '1'
