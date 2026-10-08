@@ -1,52 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE="kaljo14/places-scraper"
-PLATFORMS="linux/amd64,linux/arm64"
-BUILDER_NAME="geopulse-multiarch"
-
-# --- Resolve version tag ---------------------------------------------------
-
-if [[ -n "${1:-}" ]]; then
-    TAG="$1"
-else
-    LATEST=$(git tag --sort=-v:refname --list 'v*' | head -1)
-    if [[ -z "$LATEST" ]]; then
-        TAG="v0.1.0"
-    else
-        # Bump patch: v0.1.2 → v0.1.3
-        IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST#v}"
-        TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
-    fi
-    echo "Auto-resolved tag: ${TAG}"
+cd "$(dirname "$0")"
+release_tag="${1:-}"
+if [[ $# -ne 1 || ! "$release_tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+    echo "Usage: $0 vMAJOR.MINOR.PATCH (for example v1.2.3)" >&2
+    exit 1
 fi
-
-echo "==> Building ${IMAGE}:${TAG} for ${PLATFORMS}"
-
-# --- Ensure buildx builder exists -----------------------------------------
-
-if ! docker buildx inspect "${BUILDER_NAME}" &>/dev/null; then
-    echo "==> Creating buildx builder: ${BUILDER_NAME}"
-    docker buildx create --name "${BUILDER_NAME}" --use
-else
-    docker buildx use "${BUILDER_NAME}"
+if [[ -n "$(git status --porcelain)" ]]; then
+    echo 'Commit or stash local changes before releasing.' >&2
+    exit 1
 fi
-
-# --- Build & push ----------------------------------------------------------
-
-docker buildx build \
-    --platform "${PLATFORMS}" \
-    --tag "${IMAGE}:${TAG}" \
-    --tag "${IMAGE}:latest" \
-    --push \
-    .
-
-echo "==> Pushed ${IMAGE}:${TAG} and ${IMAGE}:latest"
-
-# --- Git tag ---------------------------------------------------------------
-
-git tag "${TAG}"
-git push origin "${TAG}"
-
-echo "==> Tagged git with ${TAG}"
-echo "Done."
+if git show-ref --verify --quiet "refs/tags/$release_tag"; then
+    echo "Tag $release_tag already exists; choose a new version." >&2
+    exit 1
+fi
+# Check the remote before creating a local tag; fail on network/auth errors.
+remote_tag=$(git ls-remote --tags origin "refs/tags/$release_tag")
+if [[ -n "$remote_tag" ]]; then
+    echo "Tag $release_tag already exists on origin; choose a new version." >&2
+    exit 1
+fi
+git tag -a "$release_tag" -m "Release $release_tag"
+git push origin "refs/tags/$release_tag"
+echo "Pushed $release_tag. GitHub Actions will check, build, and publish the image."

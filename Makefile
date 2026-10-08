@@ -134,11 +134,10 @@ mcp-server:
 	go build -o bin/mcp-server ./cmd/mcp-server/
 
 # ---------------------------------------------------------------------------
-# Deploy (multi-arch build + push to Docker Hub)
+# Release (push a semantic Git tag; CI checks and publishes the image)
 # ---------------------------------------------------------------------------
 
-# Usage: make deploy            (auto-bumps patch version)
-#        make deploy TAG=v1.2.0 (explicit tag)
+# Usage: make deploy TAG=v1.2.0 (explicit stable release tag required)
 deploy:
 	./deploy.sh $(TAG)
 
