@@ -145,7 +145,7 @@ func (a *App) importDataset(ctx context.Context, ds sofiaplanDataset) error {
 	if err != nil {
 		return fmt.Errorf("fetch dataset %d: %w", ds.id, err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("dataset %d: HTTP %d", ds.id, resp.StatusCode)

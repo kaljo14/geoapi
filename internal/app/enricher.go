@@ -88,7 +88,7 @@ func (a *App) fetchPlaceDetails(placeID string) (placeDetails, error) {
 	if err != nil {
 		return placeDetails{}, fmt.Errorf("details request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var apiResp placeDetailsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {

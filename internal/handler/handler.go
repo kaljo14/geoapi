@@ -348,7 +348,11 @@ func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
 		writeJSONError(w, "file field required", http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			h.logger.Warn("close import upload failed", zap.Error(err))
+		}
+	}()
 
 	count, err := h.app.ImportCSV(r.Context(), file)
 	if err != nil {

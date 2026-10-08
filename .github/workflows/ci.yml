@@ -23,6 +23,8 @@ jobs:
           go-version-file: go.mod
           cache-dependency-path: go.sum
       - uses: golangci/golangci-lint-action@v9
+        with:
+          version-file: .golangci-lint-version
 
   test:
     name: Build and unit tests (Go)

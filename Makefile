@@ -36,8 +36,15 @@ restart: stop run
 test:
 	go test ./...
 
-lint:
-	golangci-lint run ./...
+GOLANGCI_LINT_VERSION := $(shell cat .golangci-lint-version)
+
+bin/golangci-lint: .golangci-lint-version
+	@mkdir -p bin
+	curl -fsSL https://golangci-lint.run/install.sh -o bin/golangci-lint-install.sh
+	sh bin/golangci-lint-install.sh -b bin $(GOLANGCI_LINT_VERSION)
+
+lint: bin/golangci-lint
+	./bin/golangci-lint run ./...
 
 # ---------------------------------------------------------------------------
 # Code generation

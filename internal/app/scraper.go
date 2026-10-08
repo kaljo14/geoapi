@@ -116,7 +116,7 @@ func (a *App) fetchNearbyPlaces(lat, lng, radius float64, placeType, pageToken s
 	if err != nil {
 		return nil, "", fmt.Errorf("nearby search request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var apiResp placesAPIResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
@@ -142,7 +142,7 @@ func (a *App) fetchTextSearchPlaces(query string, lat, lng, radius float64, page
 	if err != nil {
 		return nil, "", fmt.Errorf("text search request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var apiResp placesAPIResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {

@@ -36,7 +36,7 @@ func (c *Client) get(path string, query url.Values, dst any) error {
 	if err != nil {
 		return fmt.Errorf("http get %s: %w", path, err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode >= 400 {
 		body, _ := io.ReadAll(resp.Body)
