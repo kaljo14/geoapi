@@ -1,11 +1,11 @@
 module github.com/neofyis/geopulse
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/golang-migrate/migrate/v4 v4.19.1
-	github.com/jackc/pgx/v5 v5.7.2
+	github.com/jackc/pgx/v5 v5.9.0
 	github.com/mark3labs/mcp-go v0.46.0
 	github.com/oapi-codegen/runtime v1.3.0
 	github.com/stretchr/testify v1.11.1
@@ -37,10 +37,9 @@ require (
 	github.com/swaggo/swag v1.8.1 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/crypto v0.45.0 // indirect
-	golang.org/x/sync v0.18.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
-	golang.org/x/tools v0.38.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
+	golang.org/x/tools v0.48.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

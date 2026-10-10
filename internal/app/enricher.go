@@ -20,9 +20,9 @@ type placeDetailsResponse struct {
 }
 
 type placeDetails struct {
-	Website                  string   `json:"website"`
-	FormattedPhoneNumber     string   `json:"formatted_phone_number"`
-	InternationalPhoneNumber string   `json:"international_phone_number"`
+	Website                  string `json:"website"`
+	FormattedPhoneNumber     string `json:"formatted_phone_number"`
+	InternationalPhoneNumber string `json:"international_phone_number"`
 	OpeningHours             *struct {
 		WeekdayText []string `json:"weekday_text"`
 	} `json:"opening_hours"`
@@ -30,9 +30,9 @@ type placeDetails struct {
 		Overview string `json:"overview"`
 	} `json:"editorial_summary"`
 	Types            []string `json:"types"`
-	PriceLevel       int      `json:"price_level"`
-	UserRatingsTotal int      `json:"user_ratings_total"`
-	UTCOffset        int      `json:"utc_offset"`
+	PriceLevel       int32    `json:"price_level"`
+	UserRatingsTotal int32    `json:"user_ratings_total"`
+	UTCOffset        int32    `json:"utc_offset"`
 	URL              string   `json:"url"`
 	Icon             string   `json:"icon"`
 }
@@ -123,9 +123,9 @@ func (a *App) updateEnrichment(ctx context.Context, placeID string, d placeDetai
 		OpeningHours:             pgtype.Text{String: openingHours, Valid: openingHours != ""},
 		EditorialSummary:         pgtype.Text{String: editorial, Valid: editorial != ""},
 		Types:                    pgtype.Text{String: joinStrings(d.Types), Valid: len(d.Types) > 0},
-		PriceLevel:               pgtype.Int4{Int32: int32(d.PriceLevel), Valid: d.PriceLevel != 0},
-		UserRatingsTotal:         pgtype.Int4{Int32: int32(d.UserRatingsTotal), Valid: d.UserRatingsTotal != 0},
-		UtcOffsetMinutes:         pgtype.Int4{Int32: int32(d.UTCOffset), Valid: d.UTCOffset != 0},
+		PriceLevel:               pgtype.Int4{Int32: d.PriceLevel, Valid: d.PriceLevel != 0},
+		UserRatingsTotal:         pgtype.Int4{Int32: d.UserRatingsTotal, Valid: d.UserRatingsTotal != 0},
+		UtcOffsetMinutes:         pgtype.Int4{Int32: d.UTCOffset, Valid: d.UTCOffset != 0},
 		GoogleMapsUrl:            pgtype.Text{String: d.URL, Valid: d.URL != ""},
 		IconUrl:                  pgtype.Text{String: d.Icon, Valid: d.Icon != ""},
 	})

@@ -339,10 +339,18 @@ func (h *Handler) ExportPlacesSimple(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, maxMultipartSize)
+	// #nosec G120 -- MaxBytesReader above caps the body; gosec v2.29.0 cannot track this limit.
 	if err := r.ParseMultipartForm(maxMultipartSize); err != nil {
+		var sizeErr *http.MaxBytesError
+		if errors.As(err, &sizeErr) {
+			writeJSONError(w, "upload exceeds 10 MiB limit", http.StatusRequestEntityTooLarge)
+			return
+		}
 		writeJSONError(w, "failed to parse form", http.StatusBadRequest)
 		return
 	}
+	defer func() { _ = r.MultipartForm.RemoveAll() }()
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		writeJSONError(w, "file field required", http.StatusBadRequest)
@@ -365,7 +373,7 @@ func (h *Handler) ImportPlaces(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]int{"imported": count})
 }
 
-// maxMultipartSize is the maximum size for multipart form uploads (10 MB).
+// maxMultipartSize limits the entire multipart request body, including form overhead (10 MiB).
 const maxMultipartSize = 10 << 20
 
 // writeJSONError writes a JSON error response matching the OpenAPI error format.
